@@ -1,0 +1,30 @@
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+th {
+  border: 1px solid grey;
+  padding: 3px;
+}
+td {
+  border: 1px solid grey;
+  padding: 3px;
+  vertical-align: top;
+}
+tr:nth-child(even) {
+  background-color: #ddffdd;
+}
+tr:hover {
+  background-color: lightgrey;
+}
+.docnbr {
+  width: 15%;
+}
+.titles {
+  width: 39%;
+}
+.year {
+  width: 7%;
+  text-align: center;
+}
