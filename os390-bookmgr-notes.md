@@ -1,7 +1,21 @@
 ## Comfortably read *BOOK* files in OS/390 BookManager/READ
-OS/390 ADCD 2.10 contains *BookManager/READ*, a text based alternative to reading *BOOK*s with the Microsoft Windows based [IBM Softcopy Reader](https://www.ibm.com/support/pages/ibm-softcopy-reader-windows-v40-0). Using 3270 instead of the [AS/400 5250 based InfoSeeker](https://try-as400.pocnet.net/wiki/Reviving_InfoSeeker) has the advantage of providing not just 24 lines of text, but 43 - thus giving a better overview.
+*BOOK* is an IBM proprietary format for publishing technical documentation documents. It is a very old format and has been superseded by PDFs for a long time. Still, there's a considerable amount of old documentation in *BOOK* format.
 
-A third alternative is to use the [IBM BookManager BookServer 2.3](https://github.com/cyberdotgent/bookmgr-docker). Unfortunately, this software is incompatible with reverse-proxies, leading to spurious complaints about some temporary file not being found. Also if you open a *BOOK* directly by URL (example `/bookmgr/bookmgr.cgi/BOOKS/GC28-1251-08/CCONTENTS`) the actual *BOOK* being shown is a different one.
+As with PDF, *BOOK*s need special software to be read:
+- the Microsoft Windows based [IBM Softcopy Reader](https://www.ibm.com/support/pages/ibm-softcopy-reader-windows-v40-0)
+- the [IBM BookManager BookServer 2.3](https://github.com/cyberdotgent/bookmgr-docker)
+- the [AS/400 5250 based InfoSeeker](https://try-as400.pocnet.net/wiki/Reviving_InfoSeeker)
+- OS/390 ADCD 2.10 contains *BookManager/READ* MVS
+
+This list is sorted according to my personal perception of awfulness.
+
+The visual rendition of text provided by the *IBM Softcopy Reader* isn't particularly friendly to the eye.
+
+The *IBM BookManager BookServer* is incompatible with reverse-proxies, leading to spurious complaints about some temporary file not being found. Also if you open a *BOOK* directly by URL (example `/bookmgr/bookmgr.cgi/BOOKS/GC28-1251-08/CCONTENTS`) the actual *BOOK* being shown is a different one.
+
+Some *BOOK*s contain graphics. Unless there is a character based rendition included (such as with simple flowcharts), these obviously cannot be displayed with text based viewers.
+
+Using 3270 instead of 5250 has the advantage of providing not just 24 lines of text, but 43 (if configured correctly) - thus giving a better overview.
 
 ### License
 This document is part of the IBM Documentation Utilities, to be found on [GitHub](https://github.com/PoC-dev/ibmdocs-tools) - see there for further details. Its content is subject to the [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) license, also known as *Attribution-ShareAlike 4.0 International*.
