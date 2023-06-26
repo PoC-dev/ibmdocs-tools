@@ -4,6 +4,8 @@ All of this is really really special and I'm not sure if this is of real-world v
 
 Same goes for the separate documentation for special-purpose topics. They've started as a checklist/reminder of sorts. I have reworked them to be more general-purpose instead of system-specific, and expanded them with more information to be hopefully of additional value to the reader.
 
+**Please note**: The as400 subdirectory is not yet filled with "life", but this should happen very soon.
+
 ----
 ## License
 This document is part of the IBM Documentation Utilities, to be found on [GitHub](https://github.com/PoC-dev/ibmdocs-tools) - see there for further details. Its content is subject to the [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) license, also known as *Attribution-ShareAlike 4.0 International*.
