@@ -1,0 +1,13 @@
+     A* Globals ----------------------------------------------------------------
+     A                                      UNIQUE
+     A* Record Format Name -----------------------------------------------------
+     A          R NEWTBL
+     A* Data fields
+     A            TITLE        180A
+     A            FILENAME       8A
+     A            RELEASED       4B 0
+     A            DOCNBR        18A
+     A* Index field(s)
+     A          K DOCNBR
+     A* For vim ----------------------------------------------------------------
+     A* vim: syntax=dds colorcolumn=81 autoindent

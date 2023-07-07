@@ -57,9 +57,9 @@ Along with data-holding files, there are some *logical files* providing differen
 DDS descriptions are found in the as400 subdirectory.
 
 ### The maintenance application
-This is a text-based full-screen application derived from parts of my [German language AS/400 Subfile Template](https://github.com/PoC-dev/as400-sfltemplates-german). It was initially thought as primary means to manually enter metadata for documents. Over time, helper scripts (described below) have been established to
+This is a text-based full-screen application derived from parts of my [German language AS/400 Subfile Template](https://github.com/PoC-dev/as400-sfltemplates-german). It was initially thought as primary means to manually enter metadata for documents.
 
-Code is found in the as400 subdirectory.
+Code is (soon to be) found in the as400 subdirectory.
 
 ----
 ## Files

@@ -1,0 +1,16 @@
+     A* Globals ----------------------------------------------------------------
+     A                                      DYNSLT
+     A* Record Format Name -----------------------------------------------------
+     A          R CGITBL                    PFILE(IBMDOCPF)
+     A* Data fields
+     A            TITLE
+     A            DOCNBR
+     A            RELEASED
+     A            SUBTITLE
+     A* Index field(s)
+     A          K TITLE
+     A* Select/Omit
+     A          O RELEASED                  COMP(EQ 1960)
+     A          S                           ALL
+     A* For vim ----------------------------------------------------------------
+     A* vim: syntax=dds colorcolumn=81 autoindent

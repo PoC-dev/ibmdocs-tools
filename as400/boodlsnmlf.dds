@@ -1,0 +1,9 @@
+     A* Record Format Name -----------------------------------------------------
+     A          R DLSNAMTBL                 PFILE(BOODLSNMPF)
+     A* Data fields
+     A            DOCNBR
+     A            DLSNAME
+     A* Index field(s)
+     A          K DLSNAME
+     A* For vim ----------------------------------------------------------------
+     A* vim: syntax=dds colorcolumn=81 autoindent

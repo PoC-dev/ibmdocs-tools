@@ -1,0 +1,9 @@
+     A* Record Format Name -----------------------------------------------------
+     A          R NBRCHKTBL                 PFILE(IBMDOCPF)
+     A* Data fields
+     A            DOCNBR
+     A            TITLE
+     A* Indexes
+     A          K DOCNBR
+     A* For vim ----------------------------------------------------------------
+     A* vim: syntax=dds colorcolumn=81 autoindent

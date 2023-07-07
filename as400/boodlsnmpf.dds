@@ -1,0 +1,11 @@
+     A* Globals ----------------------------------------------------------------
+     A                                      UNIQUE
+     A* Record Format Name -----------------------------------------------------
+     A          R BKNAMTBL
+     A* Data fields
+     A            DOCNBR    R               REFFLD(DOCNBR IBMDOCPF)
+     A            DLSNAME       10A
+     A* Index field(s)
+     A          K DOCNBR
+     A* For vim ----------------------------------------------------------------
+     A* vim: syntax=dds colorcolumn=81 autoindent

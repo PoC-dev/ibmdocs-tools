@@ -1,0 +1,42 @@
+.* vim: ft=pnlgrp textwidth=80
+.* CRTMNU MENU(IBMDOCS/CMDIBMD) TYPE(*UIM) SRCFILE(IBMDOCS/SOURCES) INCFILE(QGPL/MENUUIM)
+:PNLGRP.
+.*
+:VAR           NAME=zmenu.
+.* Keylist definition ----------------------------------------------------------
+:KEYL          NAME=menufkeys
+               HELP=fkeyhlp.
+.IM            #FUNCKEYS
+:EKEYL.
+.* Menu Panel definition -------------------------------------------------------
+:PANEL         NAME=menu
+               HELP=help00
+               KEYL=menufkeys
+               PANELID=zmenu
+               .IBM-Dokumentenverwaltung
+:MENU          depth='*'
+               scroll=yes.
+:TOPINST       .Auswahlmöglichkeiten:
+:MENUI         OPTION=1
+               HELP=help01
+               ACTION='CMD QSYS/CALL IBMDOCPG'
+               .Mit Dokumentennummern und Namen arbeiten
+:EMENU.
+:CMDLINE       SIZE=long.Auswahl oder Befehl
+:EPANEL.
+.* Help Texts ------------------------------------------------------------------
+:HELP NAME=help00.IBM-Dokumentenverwaltung - Hilfetext
+:XH3.IBM-Dokumentenverwaltung
+:P.Die IBM-Dokumentenverwaltung ermöglicht das Erfassen von Metadaten zu
+technischer Dokumentation seitens IBM.
+.IM #MENUUSGH
+:EHELP.
+.*
+:HELP NAME=help01.Auswahl 1 - Hilfetext
+:XH3.Auswahl 1. Mit Dokumentennummern und Namen arbeiten
+:P.Diese Auswahl treffen, um mit der Dokumentenverwaltung zu arbeiten.
+:EHELP.
+.*
+.IM #FUNCKEYSH
+.* -----------------------------------------------------------------------------
+:EPNLGRP.

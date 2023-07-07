@@ -1,0 +1,13 @@
+     A* Globals ----------------------------------------------------------------
+     A                                      UNIQUE
+     A* Record Format Name -----------------------------------------------------
+     A          R DOCTYPTBL
+     A* Data fields
+     A            DOCNBR    R               REFFLD(DOCNBR IBMDOCPF)
+     A            DOCTYPE        1A         VALUES('P' 'B') DFT('P')
+     A            DATE_ADDED      L         ALWNULL
+     A* Index field(s)
+     A          K DOCNBR
+     A          K DOCTYPE
+     A* For vim ----------------------------------------------------------------
+     A* vim: syntax=dds colorcolumn=81 autoindent
