@@ -9,5 +9,6 @@
      A            DOCNBR        18A
      A* Index field(s)
      A          K DOCNBR
+     A          K FILENAME
      A* For vim ----------------------------------------------------------------
      A* vim: syntax=dds colorcolumn=81 autoindent
