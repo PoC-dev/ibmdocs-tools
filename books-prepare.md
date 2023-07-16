@@ -16,13 +16,14 @@ My goal isn't to have each and every subtask being automated, but to provide a g
 - Collect all .BOO files into a single directory, if possible without name collisions. If not, use a hierarchy.
 - Use `rdfind` or a similar tool to eliminate exact duplicates. Be creative (possibly through renames) to eliminate name collisions. Keep 8-char names as much as possible.
 - Copy/move the result to to `webserver:/var/www/default/pages/books-to-sort/` (directory visible/configured to the Library Server).
-- Rebuild Library Server index, use admin-function in `lynx http://localhost:8080/` - running it in a regular GUI browser might lead to premature forced end of the CGI process rebuilding the index.
+- Rebuild Library Server index, use admin-function in `lynx http://localhost:8080/bookmgr/bookmgr.cgi/administration` - running it in a regular GUI browser might lead to premature forced end of the CGI process rebuilding the index.
 - Show folder contents (HTML table) in the Library Server web view.
-- Mark and copy the HTML table part of the page into *Tables.app*.
-- Clean up unneeded columns, headings, etc. so only title, filename, release date, and document number columns remain, containing pure data.
+- Mark and copy the HTML table part of the page into a new text document in *BBEdit*.
+- Clean up the content, so the document contains just pure tabular data.
 - Manually clean erratic book titles (UTF-8 crap, ©, \*, etc) - it might be easier to spot them thru the 5250 screen, though.
-- Sort by Docnbr, Filename.
-- Manually clean duplicate document numbers: Keep newest. Also delete associated files from file system.
+- Save the result in a text file.
+- Open that text file in *Tables.app*.
+- Clean up unneeded columns, headings, etc. so only title, filename, release date, and document number columns remain.
 - Copy date column, shove through `sed` or *BBEdit* search/replace for proper four-digit-year.
 ```
 s/^[0-1][0-9]/[0-3][0-9]/([6-9][0-9]) [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$/19\1/
@@ -38,7 +39,25 @@ SBMJOB CMD(CPYFRMIMPF FROMSTMF('/home/poc/newdocs.txt') +
  JOB(IMPNEWDOCS)
 RMVLNK OBJLNK('/home/poc/newdocs.txt')
 ```
-- Show duplicates (for obtaining to delete file names):
+- Output a list of "local" duplicates sharing the same document number, but with different short names:
+```
+SELECT docnbr, COUNT(docnbr) FROM newdocspf
+ GROUP BY docnbr
+  HAVING COUNT(docnbr) > 1
+```
+This list is solely to show duplicate document numbers scoped to the new documents database file. Global deduplication follows. Duplicates have to be cleaned manually!
+- Make sure the short names are unique also:
+```
+-- Check if dlsnames are unique
+SELECT dlsname, docnbr FROM boodlsnmpf WHERE dlsname IN (
+ SELECT dlsname FROM newdocspf
+) ORDER BY docnbr, dlsname
+
+SELECT filename, docnbr FROM newdocspf WHERE filename IN (
+ SELECT dlsname FROM boodlsnmpf
+) ORDER BY docnbr, filename
+```
+- Show "global" duplicates (for obtaining a list to delete file names):
 ```
 SELECT filename FROM newdocspf
 WHERE docnbr IN (
@@ -54,11 +73,13 @@ WHERE docnbr IN (
 )
 ```
 - **VERY IMPORTANT! There shall be no duplicate records!!**
+- **Hint: Leftover UTF-8 characters will cause mysterious SQL errors with causes as "string too long", and "right truncation error".**
+- Probably create a local backup into a save file from the current state of `IBMDOCS`.
 - Run `ibmdoc-merge-docs.pl`. Moves (!) records from *newdocspf* to real destination tables. Moving should make it possible to re-run the script after a forced `die;`. Has not been tested, and would be a good use case for using commitment control on the database tables.
 
 When the script has run without error, you can delete the links from `webserver:/var/www/default/pages/books-to-sort/`. **Note:** a `ls -l` should show a *link count* of two for all files there, because `ibmdoc-merge-docs.pl` links the data to a new directory entry with the name of the document number.
 
-If you want to upload the files to OS/390, better no not delete them.
+If you want to upload the files to OS/390, better no not delete them, yet.
 
 ----
-2023-07-28 poc@pocnet.net
+2023-07-16 poc@pocnet.net

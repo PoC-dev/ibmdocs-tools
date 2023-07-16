@@ -16,7 +16,7 @@ The *IBM BookManager BookServer* is incompatible with reverse-proxies, leading t
 Some *BOOK*s contain graphics. Unless there is a character based rendition included (such as with simple flowcharts), these obviously cannot be displayed with text based viewers.
 
 Using 3270 instead of 5250 has the advantage of providing not just 24 lines of text, but 43 (if configured correctly) - thus giving a better overview.
-
+π
 ### License
 This document is part of the IBM Documentation Utilities, to be found on [GitHub](https://github.com/PoC-dev/ibmdocs-tools) - see there for further details. Its content is subject to the [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) license, also known as *Attribution-ShareAlike 4.0 International*.
 
