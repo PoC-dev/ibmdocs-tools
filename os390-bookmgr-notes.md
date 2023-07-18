@@ -105,22 +105,6 @@ M /0A92,VOL=(SL,BOOKS0),USE=PRIVATE
 ```
 BOOKS*,0,2,3390    ,Y
 ```
-- Create a user catalog on the volume by running the JCL shown. The values are expanded to provide more space in the user catalog and should be fine to around 10,000 entries:
-```
-//P390UCA      JOB  1,P390,NOTIFY=P390
-//             EXEC PGM=IDCAMS
-//SERLOG       DD   DSN=SYS1.LOGREC,DISP=SHR
-//SYSPRINT     DD   SYSOUT=*
-//BOOKS0       DD   UNIT=3390,VOL=SER=BOOKS0,DISP=OLD
-//SYSIN        DD   *
-
-  DEFINE USERCATALOG ( -
-         NAME (UCBOOKS0) -
-         VOLUME (BOOKS0) -
-         CYLINDERS (40) -
-         BUFFERSPACE (16384) )
-/*
-```
 
 ----
 ## Upload
