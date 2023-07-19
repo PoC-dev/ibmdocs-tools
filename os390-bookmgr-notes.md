@@ -158,7 +158,7 @@ The Bookshelf file allocation needs to be made larger, so the rest of the *BOOK*
 //SYSUT1   DD   DSN=EOY.ENU.ALLBOOKS.BKSHELF,DISP=(OLD,DELETE)
 //SYSUT2   DD   DSN=EOY.ENU.ALLBOOKS.BKSHELF.NEW,DISP=(NEW,CATLG),
 //             UNIT=SYSDA,VOL=SER=BOOKS0,
-//             SPACE=(CYL,(50,50)),
+//             SPACE=(CYL,(100,100)),
 //             DCB=(DSORG=PS,RECFM=VB,LRECL=259,BLKSIZE=8000)
 //*
 //* Rename the new file to the old name.
