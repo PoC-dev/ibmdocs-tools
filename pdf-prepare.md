@@ -17,11 +17,11 @@ My goal isn't to have each and every subtask being automated, but to provide a g
 - Use `rdfind` or a similar tool to eliminate exact duplicates. Be creative (possibly through renames) to eliminate name collisions.
 - Create an index text file. Because the document number is found almost every time on the first three pages of a PDF, there's a very high probability that the document number can be derived automatically:
 ```
-pdfgrep --page-range=1-3 -e '[A-Z][A-Z,0-9][0-9][0-9]-[0-9]{4}-[0-9]{2}' *.pdf > document-numbers.txt
+pdfgrep --page-range=1-3 -e '[A-Z][A-Z,0-9][0-9][0-9]-[0-9]{4}-[0-9]{2}' *.pdf > /tmp/pdf-document-numbers.txt
 ```
 - Delete unnecessary white space:
 ```
-sed -Ei -e 's/:[ ]\+/:/' -e 's/[ ]*$//' document-numbers.txt
+sed -Ei -e 's/:[ ]\+/:/' -e 's/[ ]*$//' /tmp/pdf-document-numbers.txt
 ```
 - Manually inspect the resulting text file. Sometimes, one PDF file yields multiple matches. Ideally, there should be one line with a file name, a colon, and the document number. Clean excess matches per file. Sometimes there seems to be complete garbage being found. Remove those lines completely. The PDFs in question then need to be inspected by opening them and looking inside.
 - Change the colon to a blank, e. g. within `vim`:
