@@ -1,17 +1,20 @@
      A* Record Format Name -----------------------------------------------------
-     A          R BCKPOS                    PFILE(IBMDOCPF)
+     A          R BCKPOS3                   PFILE(IBMDOCPF)
      A* Data fields
      A            DOCNBR
+     A            RELEASED
      A* Indexes
+     A          K RELEASED
      A          K DOCNBR
      A*
      A* Record Format Name -----------------------------------------------------
-     A          R FWDPOS                    PFILE(IBMDOCPF)
+     A          R FWDPOS3                   PFILE(IBMDOCPF)
      A* Data fields
      A            DOCNBR
      A            TITLE
      A            RELEASED
      A* Indexes
+     A          K RELEASED
      A          K DOCNBR
      A* For vim ----------------------------------------------------------------
      A* vim: syntax=dds colorcolumn=81 autoindent

@@ -6,6 +6,7 @@
      A            DOCNBR    R               REFFLD(DOCNBR IBMDOCPF)
      A            DOCTYPE        1A         VALUES('P' 'B') DFT('P')
      A            DATE_ADDED      L         ALWNULL
+     A            DLSNAME       10A         ALWNULL
      A* Index field(s)
      A          K DOCNBR
      A          K DOCTYPE
