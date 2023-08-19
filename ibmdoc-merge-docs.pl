@@ -28,9 +28,9 @@
 #  eliminated prior to our run.
 #
 # The fields (title, filename, released, docnbr) are automatically copied into
-#  the appropriate tables IBMDOCPF, IBMDOCTYPF, and BOODLSNMPF. Hard links from
-#  $srcpath to $dstpath make the BOOKs available to the library server, and the
-#  documents list output, generated in a separate step.
+#  the appropriate tables IBMDOCPF, and IBMDOCTYPF. Hard links from $srcpath to
+#  $dstpath make the BOOKs available to the library server, and the documents
+#  list output, generated in a separate step.
 
 use strict;
 use warnings;

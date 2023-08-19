@@ -57,7 +57,7 @@ if ( ! $odbc_dbh ) {
 #---------------------------------------
 
 # Prepare SQL statements.
-$sql_dlsname_sth = $odbc_dbh->prepare("SELECT docnbr, dlsname FROM boodlsnmpf");
+$sql_dlsname_sth = $odbc_dbh->prepare("SELECT docnbr, dlsname FROM ibmdoctypf WHERE doctyp='B'");
 if (defined($odbc_dbh->errstr)) {
 	printf("Preparation error for sql_dlsname(), value: %s\n", $odbc_dbh->errstr);
 	die;
