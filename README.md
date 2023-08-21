@@ -75,6 +75,7 @@ A short explanation of the files (and directories) contained in this repository,
 ### Scripts
 Scripts accessing the AS/400 database assume a configured and functioning ODBC connection.
 
+- `ibmdoc-copy-unhandled-pdfs.pl` copies PDF files with empty description to a directory, e. g. in ones' home directory for inspection over e. g. a Samba share with the excellent Apple *Preview.app*.
 - `ibmdoc-create-8char-links.pl` creates hard links from *BOOK* files (with the document number as file name) to another directory with DLS (DOS compatible) file names. Affiliation is checked by querying the DLS names database table. It does no changes to the database, only to the destination directory in the file system. Part of `ibmdoc-merge-docs.pl` is doing the reverse.
 - `ibmdoc-db-lint.pl` script verifies the mutual consistency of database content vs. available files in the file system. It creates new (dummy) records for every file in the file system not being listed in the database, deletes database entries not backed by a file in the file system, checks and deletes orphaned metadata entries without being backed by any document in the documents types table, and creates new (dummy) records for every in the documents types table not having a metadata entry. **Note:** At the moment, there is no verification for the DLS (DOS compatible) file names table. This should be fixed.
 - `ibmdoc-generate-index.sh` saves the long running CGI's output to a local file, and fixes owner/permissions for documents in that folder.
