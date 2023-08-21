@@ -5,7 +5,12 @@ Occasionally, there's a large cache of PDF files coming in. Since this is happen
 This document is part of the IBM Documentation Utilities, to be found on [GitHub](https://github.com/PoC-dev/ibmdocs-tools) - see there for further details. Its content is subject to the [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) license, also known as *Attribution-ShareAlike 4.0 International*.
 
 #### Preface
-PDFs found on some CDs are already - kind of - named by document number. They usually lack the "version" of the document to still fit into the old PC-DOS 8+3 naming scheme. For that, it's not beneficial to use those names compared to the procedure described below.
+PDFs found on some InfoCenter CDs are already - kind of - named by document number. They usually lack the "version" of the document to still fit into the old PC-DOS 8+3 naming scheme. For that, it's not beneficial to use those names compared to the procedure described below.
+
+Also noteworthy is that some PDFs on said InfoCenter CDs have a size of 0 bytes. Sort those out prior to ddoing anything else.
+``` 
+find . -type f -a -name "*.pdf" -a -size 0 -exec rm -v {} \;
+``` 
 
 ### Components being used
 - Linux shell & friends.
@@ -54,4 +59,4 @@ rm -rf newpdfs
 - Finally run `ibmdoc-generate-index.sh` to publish the new database entries to the documents table.
 
 ----
-2023-08-20 poc@pocnet.net
+2023-08-22 poc@pocnet.net
