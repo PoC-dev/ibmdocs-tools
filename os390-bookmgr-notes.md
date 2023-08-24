@@ -124,6 +124,8 @@ Unfortunately, *BookManager/READ* has a limit of 2,112 datasets to be listed in 
 
 A Bookshelf can list many more *BOOK* datasets. Thus it's a good idea to add all *BOOK*s to a Bookshelf to have an index readily available.
 
+**Note:** There's a limitation of around 8k BOOKs which can be handled in a given TSO memory region. This is not about the OS running out of memory! Instead, the user's single virtual memory allocation of 31 bits (minus some overhead) is exhausted. No more *BOOK*s can be added to a given Bookshelf. Manually created Bookshelf files will fail to open. Current workaround: None known.
+
 The filter mechanism of *BookManager/READ* for listing datasets supports only simple wildcard matches, so in the end you need to iterate through the complete alphabet 26 times to eventually add all datasets to an "allbooks" shelf. So far I'm not aware if it's possible to automate this process.
 
 To add *BOOK*s to a Bookshelf dataset,
@@ -196,4 +198,4 @@ The next steps are somewhat free-form and highly repetitive. Depending on the fi
 You may choose to use two loops instead: One to create many temporary Bookshelves (alphapbetically descending) and leave them open (Steps 1..3), and in a second run, add the temporary dataset's contents to the main Bookshelf.
 
 ----
-2023-06-26 poc@pocnet.net
+2023-08-24 poc@pocnet.net
