@@ -51,6 +51,8 @@ macdef init
 ```
 Note that an empty line **must** be added to the end of a `.netrc` stanza.
 
+See [Using PDFs and BookManager Books on your workstation or mainframe](https://www.ibm.com/support/pages/using-pdfs-and-bookmanager-books-your-workstation-or-mainframe) for some hints about uploading *BOOK* files, and related data.
+
 ### Generating the FTP Upload-List
 To upload documents to OS/390 by FTP, a list of documents (sorted descending by size for better allocation efficiency) and their sizes have to be compiled. The sizes output is used to allocate the required space individually for each dataset. *BOOK* files are by nature padded to 4k blocks anyway, so a simple division suffices. This list is then converted into FTP commands:
 ```
@@ -198,4 +200,4 @@ The next steps are somewhat free-form and highly repetitive. Depending on the fi
 You may choose to use two loops instead: One to create many temporary Bookshelves (alphapbetically descending) and leave them open (Steps 1..3), and in a second run, add the temporary dataset's contents to the main Bookshelf.
 
 ----
-2023-08-24 poc@pocnet.net
+2023-08-26 poc@pocnet.net
