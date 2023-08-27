@@ -39,32 +39,35 @@ SBMJOB CMD(CPYFRMIMPF FROMSTMF('/home/poc/newdocs.txt') +
  JOB(IMPNEWDOCS)
 RMVLNK OBJLNK('/home/poc/newdocs.txt')
 ```
-- Output a list of "local" duplicates sharing the same document number, but with different short names:
+- Output a list of "local" duplicates sharing the same document number, but with different short names. Result must be empty.
 ```
 SELECT docnbr, COUNT(docnbr) FROM newdocspf
  GROUP BY docnbr
   HAVING COUNT(docnbr) > 1
 ```
-This list is solely to show duplicate document numbers scoped to the new documents database file. Global deduplication follows. Duplicates have to be cleaned manually!
-- Make sure the short names are unique also:
+This list is solely to show duplicate document numbers scoped to the new documents database file. Duplicates within the new documents directory have to be cleaned manually!
+- Make sure the short names are globally unique also:
 ```
--- Check if dlsnames are unique
-SELECT dlsname, docnbr FROM boodlsnmpf WHERE dlsname IN (
- SELECT dlsname FROM newdocspf
+-- Check if dlsnames are unique: Results must be empty!
+SELECT dlsname, docnbr FROM ibmdoctypf WHERE dlsname IN (
+ SELECT filename FROM newdocspf
 ) ORDER BY docnbr, dlsname
 
 SELECT filename, docnbr FROM newdocspf WHERE filename IN (
- SELECT dlsname FROM boodlsnmpf
+ SELECT dlsname FROM ibmdoctypf
 ) ORDER BY docnbr, filename
 ```
-- Show "global" duplicates (for obtaining a list to delete file names):
+- Show "global" duplicates of document numbers, for obtaining a list to delete file-/dlsnames. Result must be empty.
 ```
 SELECT filename FROM newdocspf
 WHERE docnbr IN (
  SELECT docnbr FROM ibmdoctypf WHERE doctype='B'
 )
 ```
-- Manually extract the shown file names, add `.boo` extension and feed the list to `rm`.
+- Manually extract the shown file names, add `.boo` extension and feed the list to `rm`, inside the new documents directory.
+
+**Note:** If you want to keep the original document but want it to have the new dlsname, you need to rename it in *ibmdoctypf*. Remember to rename the dataset in OS/390, if you use this for reading *BOOK*s.
+
 - Delete duplicates (after file deletion):
 ```
 DELETE FROM newdocspf
@@ -82,4 +85,4 @@ WHERE docnbr IN (
 If you want to upload the files to OS/390, better no not delete them, yet.
 
 ----
-2023-07-16 poc@pocnet.net
+2023-08-27 poc@pocnet.net
