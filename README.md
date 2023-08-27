@@ -100,4 +100,4 @@ PDFs usually - for me - come in in small quantities, and not very often, so hand
 This process is complex. See [books-prepare.md](books-prepare.md).
 
 ----
-2023-08-24 poc@pocnet.net
+2023-08-27 poc@pocnet.net
