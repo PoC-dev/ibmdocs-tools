@@ -13,4 +13,4 @@
      A          O RELEASED                  COMP(EQ 1960)
      A          S                           ALL
      A* For vim ----------------------------------------------------------------
-     A* vim: syntax=dds colorcolumn=81 autoindent
+     A* vim: syntax=dds colorcolumn=81 autoindent noignorecase

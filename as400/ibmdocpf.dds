@@ -10,4 +10,4 @@
      A* Index field(s)
      A          K DOCNBR
      A* For vim ----------------------------------------------------------------
-     A* vim: syntax=dds colorcolumn=81 autoindent
+     A* vim: syntax=dds colorcolumn=81 autoindent noignorecase
