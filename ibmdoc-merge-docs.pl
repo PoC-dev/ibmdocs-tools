@@ -47,8 +47,10 @@ my $srcpath = "/var/www/default/pages/newbooks";
 my $dstpath = "/var/www/default/pages/ibmdocs";
 
 # Vars
-my ($odbc_dbh, $sql_list_newdoc_sth, $sql_check_olddoc_sth, $sql_check_doctyp_sth, $sql_check_dlsname_sth, $sql_insert_doctyp_sth, $sql_insert_doc_sth, $sql_insert_dlsname_sth, $sql_del_newdoc_sth);
-my ($today, $sql, $count, $title, $filename, $released, $docnbr, $srcfile, $dstfile, $prior_filename);
+my	($count, $docnbr, $dstfile, $filename, $odbc_dbh, $prior_filename, $released, $sql, $sql_check_doctyp_sth,
+	 $sql_check_olddoc_sth, $sql_del_newdoc_sth, $sql_insert_doc_sth, $sql_insert_doctyp_sth, $sql_list_newdoc_sth, $srcfile,
+	 $title, $today
+	);
 
 # Execute anytime before using <STDOUT>.
 # Causes the currently selected handle to be flushed immediately and after every print.
@@ -87,12 +89,7 @@ if (defined($odbc_dbh->errstr)) {
 	printf("Preparation error for sql_check_doctyp(), value: %s\n", $odbc_dbh->errstr);
 	die;
 }
-$sql_check_dlsname_sth = $odbc_dbh->prepare("SELECT COUNT(*) FROM boodlsnmpf WHERE docnbr=?");
-if (defined($odbc_dbh->errstr)) {
-	printf("Preparation error for sql_check_dlsname(), value: %s\n", $odbc_dbh->errstr);
-	die;
-}
-$sql_insert_doctyp_sth = $odbc_dbh->prepare("INSERT INTO ibmdoctypf (docnbr, doctype, date_added) VALUES (?, ?, ?)");
+$sql_insert_doctyp_sth = $odbc_dbh->prepare("INSERT INTO ibmdoctypf (docnbr, doctype, date_added, dlsname) VALUES (?, ?, ?, ?)");
 if (defined($odbc_dbh->errstr)) {
 	printf("Preparation error for sql_insert_doctyp(), value: %s\n", $odbc_dbh->errstr);
 	die;
@@ -100,11 +97,6 @@ if (defined($odbc_dbh->errstr)) {
 $sql_insert_doc_sth = $odbc_dbh->prepare("INSERT INTO ibmdocpf (title, docnbr, released) VALUES (?, ?, ?)");
 if (defined($odbc_dbh->errstr)) {
 	printf("Preparation error for sql_insert_doc(), value: %s\n", $odbc_dbh->errstr);
-	die;
-}
-$sql_insert_dlsname_sth = $odbc_dbh->prepare("INSERT INTO boodlsnmpf (docnbr, dlsname) VALUES (?, ?)");
-if (defined($odbc_dbh->errstr)) {
-	printf("Preparation error for sql_insert_dlsname(), value: %s\n", $odbc_dbh->errstr);
 	die;
 }
 $sql_del_newdoc_sth = $odbc_dbh->prepare("DELETE FROM newdocspf WHERE docnbr=? AND filename=?");
@@ -151,7 +143,7 @@ while( ($title, $filename, $released, $docnbr) = $sql_list_newdoc_sth->fetchrow 
 	if ( $count eq 0 ) {
 		# No entry found. Create new from newdocspf.
 
-		$sql_insert_doctyp_sth->execute($docnbr, "B", $today);
+		$sql_insert_doctyp_sth->execute($docnbr, "B", $today, uc($filename));
 		if (defined($odbc_dbh->errstr)) {
 			printf("\tExecution error at sql_insert_doctyp(), value: %s\n", $odbc_dbh->errstr);
 			die;
@@ -178,25 +170,6 @@ while( ($title, $filename, $released, $docnbr) = $sql_list_newdoc_sth->fetchrow 
 		$sql_insert_doc_sth->execute($title, $docnbr, $released);
 		if (defined($odbc_dbh->errstr)) {
 			printf("\tExecution error at sql_insert_doc(), value: %s\n", $odbc_dbh->errstr);
-			die;
-		}
-	}
-
-
-	# Check file name translations database for an entry of a given document number.
-	$sql_check_dlsname_sth->execute($docnbr);
-	if (defined($odbc_dbh->errstr)) {
-		printf("\tExecution error at sql_check_dlsname(): value: %s\n", $odbc_dbh->errstr);
-		die;
-	}
-	($count) = $sql_check_dlsname_sth->fetchrow;
-
-	if ( $count eq 0 ) {
-		# No entry found. Create new.
-
-		$sql_insert_dlsname_sth->execute($docnbr, uc($filename));
-		if (defined($odbc_dbh->errstr)) {
-			printf("\tExecution error at sql_insert_dlsname(), value: %s\n", $odbc_dbh->errstr);
 			die;
 		}
 	}
@@ -235,17 +208,11 @@ if ( $sql_check_olddoc_sth ) {
 if ( $sql_check_doctyp_sth ) {
 	$sql_check_doctyp_sth->finish;
 }
-if ( $sql_check_dlsname_sth ) {
-	$sql_check_dlsname_sth->finish;
-}
 if ( $sql_insert_doctyp_sth ) {
 	$sql_insert_doctyp_sth->finish;
 }
 if ( $sql_insert_doc_sth ) {
 	$sql_insert_doc_sth->finish;
-}
-if ( $sql_insert_dlsname_sth ) {
-	$sql_insert_dlsname_sth->finish;
 }
 if ( $sql_del_newdoc_sth ) {
 	$sql_del_newdoc_sth->finish;
@@ -257,5 +224,5 @@ if ( $odbc_dbh ) {
 }
 
 #--------------------------------------------------------------------------------------------------------------
-# vim:tabstop=4:shiftwidth=4:autoindent
+# vim: tabstop=4 shiftwidth=4 autoindent colorcolumn=133
 # -EOF-
