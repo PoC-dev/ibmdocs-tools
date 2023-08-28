@@ -19,6 +19,8 @@
 # Suite 330, Boston, MA 02111-1307 USA or get it at
 # http://www.gnu.org/licenses/gpl.html
 
-ls -1 /var/www/default/pages/ibmdocs |grep -E -v -e '^[A-Z0-9]{4}-[0-9]{4}-[0-9]{2}(-200[0x])?(-de)?\.(pdf|boo)$' \
-			-e '^360D[-.][0-9]{2}\.[0-9]\.[0-9]{3}\.(pdf|boo)$' \
-			-e '^Y27-7128-03\.pdf$' -e '^G550-20001-09\.pdf$' -e '^GA19-5486-21B\.pdf$' -e '^GA19-5486-23B\.pdf$'
+ls -1 /var/www/default/pages/ibmdocs |grep -E -v \
+	-e '^[A-Z0-9]{3,4}-[0-9]{4,5}-[0-9]{2}[A-Za-z]?(-200[0x])?(-de)?\.(pdf|boo)$' \
+	-e '^360D[-.][0-9]{2}\.[0-9]\.[0-9]{3}\.(pdf|boo)$' \
+	-e '^Y27-7128-03\.pdf$'
+
