@@ -8,9 +8,9 @@ This document is part of the IBM Documentation Utilities, to be found on [GitHub
 PDFs found on some InfoCenter CDs are already - kind of - named by document number. They usually lack the "version" of the document to still fit into the old PC-DOS 8+3 naming scheme. For that, it's not beneficial to use those names compared to the procedure described below.
 
 Also noteworthy is that some PDFs on said InfoCenter CDs have a size of 0 bytes. Sort those out prior to ddoing anything else.
-``` 
+```
 find . -type f -a -name "*.pdf" -a -size 0 -exec rm -v {} \;
-``` 
+```
 
 ### Components being used
 - Linux shell & friends.
@@ -58,5 +58,12 @@ rm -rf newpdfs
 - Manually inspect the database for missing titles. You need to manually open each document with an empty metadata record in the database, and type/copy-paste the title and release year along with a probable subtitle (most often for RedBooks) to the database. This is what the AS/400 frontend is mainly meant for.
 - Finally run `ibmdoc-generate-index.sh` to publish the new database entries to the documents table.
 
+### For future enhancements
+Perhaps it might help automatic extraction of title and year to have a copy of the front page in a text file.
+```
+ls -1 |while read PDF; do pdftotext -f 1 -l 1 ${PDF} $(basename ${PDF} .pdf).txt; done
+```
+This is currently under investigation.
+
 ----
-2023-08-22 poc@pocnet.net
+2023-08-29 poc@pocnet.net
