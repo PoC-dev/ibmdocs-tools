@@ -63,7 +63,7 @@ In case something went wrong, it might be advisable to convert the given list in
 ```
 awk '{print "del " $2 "k"}' < /tmp/books-list.txt > /tmp/books-delete.txt
 ```
-Those files are to be fed to *stdin* of the `ftp` command.
+Those files are to be fed to *stdin* of the `ftp` command. See below.
 
 ----
 ## Adding a new volume to OS/390
@@ -200,4 +200,4 @@ The next steps are somewhat free-form and highly repetitive. Depending on the fi
 You may choose to use two loops instead: One to create many temporary Bookshelves (alphapbetically descending) and leave them open (Steps 1..3), and in a second run, add the temporary dataset's contents to the main Bookshelf.
 
 ----
-2023-08-26 poc@pocnet.net
+2023-08-30 poc@pocnet.net
