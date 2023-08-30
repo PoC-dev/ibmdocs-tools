@@ -1,0 +1,288 @@
+     A* Copyright 2023 Patrik Schindler <poc@pocnet.net>.
+     A*
+     A* This file is part of the IBM Documentation Utilities, to be found on
+     A* https://github.com/PoC-dev/ibmdocs-tools
+     A* see there for further details.
+     A*
+     A* This is free software; you can redistribute it and/or modify it
+     A* under the terms of the GNU General Public License as published by the
+     A* Free Software Foundation; either version 2 of the License, or (at your
+     A* option) any later version.
+     A*
+     A* It is distributed in the hope that it will be useful, but WITHOUT
+     A* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+     A* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+     A* for more details.
+     A*
+     A* You should have received a copy of the GNU General Public License along
+     A* with it; if not, write to the Free Software Foundation, Inc., 59
+     A* Temple Place, Suite 330, Boston, MA 02111-1307 USA or get it at
+     A* http://www.gnu.org/licenses/gpl.html
+     A*
+     A* Globals ----------------------------------------------------------------
+     A                                      REF(IBMDOCTYPF)
+     A                                      ERRSFL
+     A                                      HELP
+     A                                      ALTHELP(CA01)
+     A                                      HLPPNLGRP(GLOBAL IBMDOCTYHP)
+     A* Subfile Screen ---------------------------------------------------------
+     A          R MAINSFL                   SFL
+     A  99                                  SFLNXTCHG
+     A*         ##What may we do with the selected record?
+     A            OPT            1A  B  9  3VALUES(' ' '2' '3' '4' '5')
+     A  99                                  DSPATR(RI)
+     A*         ##Pull values from the table definition itself...
+     A            DOCNBR    R        O  9  7
+     A            DOCTYPE   R        O  9 28
+     A            DATE_ADDEDR     D  O  9 32
+     A  36                                  DSPATR(ND)
+     A            DLSNAME   R        O  9 45
+     A* Subfile Control Screen -------------------------------------------------
+     A          R MAINCTL                   SFLCTL(MAINSFL)
+     A                                      CHGINPDFT(LC UL)
+     A*                                   ##Command Key definitions.
+     A                                      CA03(03 'Verlassen')
+     A                                      CA05(05 'Aktualisieren')
+     A                                      CA06(06 'Neu')
+     A                                      CA11(11 'Sortierung')
+     A                                      CA12(12 'Abbrechen')
+     A N34                                  PAGEDOWN(25)
+     A N35                                  PAGEUP(26)
+     A                                      HOME(27 'Suchfeld')
+     A                                      VLDCMDKEY(29 'Any valid key')
+     A*                                   ##Basic Settings for subfile ctrl.
+     A                                      OVERLAY
+     A  91                                  SFLMSGID(ERR0012 GENERICMSG 91)
+     A  92                                  SFLMSGID(ERR1021 GENERICMSG 92)
+     A  93                                  SFLMSGID(ERR1218 GENERICMSG 93)
+     A  95                                  SFLMSGID(INF0001 GENERICMSG 95)
+     A                                      SFLSIZ(&SFLSIZ)
+     A                                      SFLPAG(13)
+     A  31                                  SFLDSP
+     A  32                                  SFLDSPCTL
+     A  33                                  SFLCLR
+     A  34                                  SFLEND(*MORE)
+     A*         ##Help Area definition for this screen.
+     A                                      HLPTITLE('Dokument-Typenliste - -
+     A                                      Listendarstellung')
+     A          H                           HLPARA(3 1 3 80)
+     A                                      HLPPNLGRP('MAIN/POSTO' IBMDOCTYHP)
+     A          H                           HLPARA(5 2 6 63)
+     A                                      HLPPNLGRP('MAIN/SFLOPTS' IBMDOCTYHP)
+     A          H                           HLPARA(*CNST 1)
+     A                                      HLPPNLGRP('SFLHDR/OPT' IBMDOCTYHP)
+     A          H                           HLPARA(*CNST 2)
+     A                                      HLPPNLGRP('SFLHDR/DOCNBR'
+     A                                      IBMDOCTYHP)
+     A          H                           HLPARA(*CNST 3)
+     A                                      HLPPNLGRP('SFLHDR/DOCTYPE'
+     A                                      IBMDOCTYHP)
+     A          H                           HLPARA(*CNST 4)
+     A                                      HLPPNLGRP('SFLHDR/DATE_ADDED'
+     A                                      IBMDOCTYHP)
+     A          H                           HLPARA(*CNST 5)
+     A                                      HLPPNLGRP('SFLHDR/DLSNAME'
+     A                                      IBMDOCTYHP)
+     A            SFLRCDNBR      3S 0H      SFLRCDNBR(CURSOR)
+     A            SFLSIZ         5S 0P
+     A*         ##End of definitions. Here be real screen elements.
+     A                                  1 30'Dokument-Typenliste'
+     A                                      DSPATR(HI)
+     A                                  3  7'Listenanfang bei . . .'
+     A            POSTO         18A  I  3 32
+     A  41                                  DSPATR(PC)
+     A  50                              3 53'(Dokumentnummer)'
+     A  51                              3 53'(Hinzugefügt)'
+     A  52                              3 53'(DOS-Name)'
+     A                                  5  2'Auswahl eingeben und -
+     A                                      Eingabetaste drücken.'
+     A                                      COLOR(BLU)
+     A                                  6  3'2=Ändern  3=Duplizieren  -
+     A                                      4=Löschen  5=Anzeigen'
+     A                                      COLOR(BLU)
+     A  35                              7 70'Beginn ...' DSPATR(HI)
+     A                                  8  2'Opt' DSPATR(HI) HLPID(1)
+     A                                  8  7'Dokumentnummer' DSPATR(HI) HLPID(2)
+     A  50                                  DSPATR(UL)
+     A                                  8 27'Typ' DSPATR(HI) HLPID(3)
+     A                                  8 32'Hinzugefügt' DSPATR(HI) HLPID(4)
+     A  51                                  DSPATR(UL)
+     A                                  8 45'DOS-Name' DSPATR(HI) HLPID(5)
+     A  52                                  DSPATR(UL)
+     A* Footer of the form -----------------------------------------------------
+     A* A subfile control record may contain elements above or below the actual
+     A* subfile, but not both.
+     A          R MAINBTM
+     A                                      HLPTITLE('Dokument-Typenliste - -
+     A                                      Listendarstellung')
+     A          H                           HLPARA(*RCD)
+     A                                      HLPPNLGRP('MAIN/SFLBTM' IBMDOCTYHP)
+     A                                 23  2'F1=Hilfe   -
+     A                                      F3=Verlassen   -
+     A                                      F5=Aktualisieren   -
+     A                                      F6=Neu   -
+     A                                      F11=Sort.   -
+     A                                      F12=Abbrechen'
+     A                                      COLOR(BLU)
+     A* No data instead of SFL -------------------------------------------------
+     A          R MAINND                    OVERLAY
+     A                                      HLPTITLE('Dokument-Typenliste - -
+     A                                      Listendarstellung')
+     A          H                           HLPARA(*RCD)
+     A                                      HLPPNLGRP('MAIN/SFLND' IBMDOCTYHP)
+     A                                 10  7'(Keine Datensätze zum Anzeigen.)'
+     A* ------------------------------------------------------------------------
+     A* Subfile Screen: Delete confirmation ------------------------------------
+     A          R DLTSFL                    SFL
+     A                                      SFLNXTCHG
+     A            DOPT           1A  B  7  3VALUES(' ' '4')
+     A  99                                  DSPATR(RI)
+     A*         ##Pull values from the table definition itself...
+     A*           You can also use REFFLD(MAINSFL/FLDNAME *SRC)
+     A            DOCNBR    R        O  7  7
+     A            DOCTYPE   R        O  7 28
+     A            DATE_ADDEDR     D  O  7 32
+     A  36                                  DSPATR(ND)
+     A            DLSNAME   R        O  7 45
+     A* Subfile Control Screen -------------------------------------------------
+     A          R DLTCTL                    SFLCTL(DLTSFL)
+     A*                                   ##Command Key definitions.
+     A                                      CA12(12 'Abbrechen')
+     A                                      VLDCMDKEY(29 'Any valid key')
+     A*                                   ##Basic Settings for subfile ctrl.
+     A                                      OVERLAY
+     A  91                                  SFLMSGID(ERR0012 GENERICMSG 91)
+     A  93                                  SFLMSGID(ERR1218 GENERICMSG 93)
+     A  96                                  SFLMSGID(INF0999 GENERICMSG 96)
+     A                                      SFLSIZ(30)
+     A                                      SFLPAG(15)
+     A  31                                  SFLDSP
+     A  32                                  SFLDSPCTL
+     A  33                                  SFLCLR
+     A  34                                  SFLEND(*MORE)
+     A*         ##Help Area definition for this screen.
+     A                                      HLPTITLE('Dokument-Typenliste - -
+     A                                      Löschabfrage')
+     A          H                           HLPARA(3 1 4 80)
+     A                                      HLPPNLGRP('DELETE/SFLOPTS' SFLDLTHP)
+     A          H                           HLPARA(*CNST 1)
+     A                                      HLPPNLGRP('DELETE/OPT' SFLDLTHP)
+     A          H                           HLPARA(6 7 6 80)
+     A                                      HLPPNLGRP('DELETE/FIELDS' SFLDLTHP)
+     A          H                           HLPARA(7 1 21 80)
+     A                                      HLPPNLGRP('DELETE/SFLDTA' SFLDLTHP)
+     A            SFLDLTNBR      3S 0H      SFLRCDNBR(CURSOR)
+     A*         ##End of definitions. Here be real screen elements.
+     A                                  1 29'Löschen von Einträgen'
+     A                                      DSPATR(HI)
+     A                                  3  2'Auswahl ggfs. anpassen und -
+     A                                      Eingabetaste drücken.'
+     A                                      COLOR(BLU)
+     A                                  4  3'4=Löschen  Leer=Nicht löschen'
+     A                                      COLOR(BLU)
+     A                                  6  2'Opt' DSPATR(HI) HLPID(1)
+     A                                  6  7'Docnbr' DSPATR(HI) HLPID(2)
+     A                                  6 27'Typ' DSPATR(HI) HLPID(3)
+     A                                  6 32'Hinz.' DSPATR(HI) HLPID(4)
+     A                                  6 45'DOS-Name' DSPATR(HI) HLPID(5)
+     A* Footer of the form -----------------------------------------------------
+     A* A subfile control record may contain elements above or below the actual
+     A* subfile, but not both.
+     A          R DLTBTM
+     A                                      HLPTITLE('Dokument-Typenliste - -
+     A                                      Löschabfrage')
+     A          H                           HLPARA(*RCD)
+     A                                      HLPPNLGRP('DELETE/SFLBTM' SFLDLTHP)
+     A                                 23  2'F1=Hilfe   F12=Abbrechen'
+     A                                      COLOR(BLU)
+     A* No data instead of SFL -------------------------------------------------
+     A          R DLTND                     OVERLAY
+     A                                      HLPTITLE('Dokument-Typenliste - -
+     A                                      Löschabfrage')
+     A          H                           HLPARA(*RCD)
+     A                                      HLPPNLGRP('DELETE/SFLND' SFLDLTHP)
+     A                                  8  7'(Keine Datensätze zum Anzeigen.)'
+     A* ------------------------------------------------------------------------
+     A* ------------------------------------------------------------------------
+     A* One form for displaying further details, or editing existing, or adding
+     A* new records. We can switch this form to "looks like output only fields"
+     A* with IN44.
+     A          R DETAILFRM
+     A                                      CHGINPDFT(LC UL)
+     A                                      CHANGE(28 'Content has changed')
+     A                                      CA03(03 'Verlassen')
+     A                                      CA12(12 'Abbrechen')
+     A                                      RTNCSRLOC(*RECNAME &CSREC &CSFLD)
+     A*         ##Help Area definition for this screen.
+     A                                      HLPTITLE('Dokument-Typenliste - -
+     A                                      Details')
+     A          H                           HLPARA(1 1 1 80)
+     A                                      HLPPNLGRP('DETAIL/MODE' IBMDDTLTHP)
+     A          H                           HLPARA(3 1 3 80)
+     A                                      HLPPNLGRP('DETAIL/OPTIONS'
+     A                                      IBMDDTLTHP)
+     A          H                           HLPARA(5 1 5 43)
+     A                                      HLPPNLGRP('DFIELD/DOCNBR'
+     A                                      IBMDDTLTHP)
+     A          H                           HLPARA(7 1 7 26)
+     A                                      HLPPNLGRP('DFIELD/DOCTYPE'
+     A                                      IBMDDTLTHP)
+     A          H                           HLPARA(9 1 9 35)
+     A                                      HLPPNLGRP('DFIELD/DATE_ADDED'
+     A                                      IBMDDTLTHP)
+     A          H                           HLPARA(11 1 11 35)
+     A                                      HLPPNLGRP('DFIELD/DLSNAME'
+     A                                      IBMDDTLTHP)
+     A          H                           HLPARA(23 1 23 80)
+     A                                      HLPPNLGRP('DETAIL/FKEYS' IBMDDTLTHP)
+     A*         ##End of definitions. Here be real screen elements.
+     A  42N43                           1 30'Neuen Eintrag erfassen'
+     A                                      DSPATR(HI)
+     A N42 43                           1 32'Eintrag ändern'
+     A                                      DSPATR(HI)
+     A N42N43                           1 31'Eintrag anzeigen'
+     A                                      DSPATR(HI)
+     A  42N43                           3  2'Felder ausfüllen und Eingabetaste -
+     A                                      drücken.'
+     A                                      COLOR(BLU)
+     A N42 43                           3  2'Felder anpassen und Eingabetaste -
+     A                                      drücken.'
+     A                                      COLOR(BLU)
+     A N42N43                           3  2'Details:'
+     A                                      COLOR(BLU)
+     A                                  5  3'Dokumentnummer  . . .'
+     A            DOCNBR    R        B  5 26
+     A  44                                  DSPATR(PR)
+     A N44                                  DSPATR(UL)
+     A N44 60                               DSPATR(PC)
+     A  92                                  ERRMSGID(ERR1021 GENERICMSG 92)
+     A                                  7  3'Dokumenttyp . . . . .'
+     A            DOCTYPE   R        B  7 26
+     A  44                                  DSPATR(PR)
+     A N44                                  DSPATR(UL)
+     A N44 61                               DSPATR(PC)
+     A  92                                  ERRMSGID(ERR1021 GENERICMSG 92)
+     A                                  9  3'Hinzugefügt . . . . .'
+     A            DATE_ADDEDR     D  B  9 26
+     A  44                                  DSPATR(PR)
+     A N44                                  DSPATR(UL)
+     A N44 62                               DSPATR(PC)
+     A                                 11  3'DOS-Name  . . . . . .'
+     A            DLSNAME   R        B 11 26
+     A  44                                  DSPATR(PR)
+     A N44                                  DSPATR(UL)
+     A N44 63                               DSPATR(PC)
+     A                                 23  2'F1=Hilfe   F3=Verlassen   -
+     A                                      F12=Abbrechen'
+     A                                      COLOR(BLU)
+     A* This is entirely to prevent DSPATR(RI) error indication with just a
+     A*  warning message. Place in least used screen position.
+     A            DUMMY$$        1A  O 23 80DSPATR(ND)
+     A  91                                  ERRMSGID(ERR0012 GENERICMSG 91)
+     A  93                                  ERRMSGID(ERR1218 GENERICMSG 93)
+     A  94                                  ERRMSGID(RDO1218 GENERICMSG 94)
+     A  95                                  ERRMSGID(INF0001 GENERICMSG 95)
+     A            CSREC         10A  H
+     A            CSFLD         10A  H
+     A* For vim ----------------------------------------------------------------
+     A* vim: syntax=dds colorcolumn=81 autoindent noignorecase

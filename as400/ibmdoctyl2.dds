@@ -11,7 +11,7 @@
      A*
      A* It is distributed in the hope that it will be useful, but WITHOUT
      A* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-     A* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+     A* ITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
      A* for more details.
      A*
      A* You should have received a copy of the GNU General Public License along
@@ -20,22 +20,26 @@
      A* http://www.gnu.org/licenses/gpl.html
      A*
      A* Record Format Name -----------------------------------------------------
-     A          R BCKPOS2                   PFILE(IBMDOCPF)
+     A          R BCKPOS2                   PFILE(IBMDOCTYPF)
      A* Data fields
      A            DOCNBR
-     A            TITLE
+     A            DOCTYPE
+     A            DATE_ADDED
      A* Indexes
-     A          K TITLE
+     A          K DATE_ADDED
      A          K DOCNBR
+     A          K DOCTYPE
      A*
      A* Record Format Name -----------------------------------------------------
-     A          R FWDPOS2                   PFILE(IBMDOCPF)
+     A          R FWDPOS2                   PFILE(IBMDOCTYPF)
      A* Data fields
      A            DOCNBR
-     A            TITLE
-     A            RELEASED
+     A            DOCTYPE
+     A            DATE_ADDED
+     A            DLSNAME
      A* Indexes
-     A          K TITLE
+     A          K DATE_ADDED
      A          K DOCNBR
+     A          K DOCTYPE
      A* For vim ----------------------------------------------------------------
      A* vim: syntax=dds colorcolumn=81 autoindent noignorecase

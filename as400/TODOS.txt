@@ -1,0 +1,3 @@
+- Show SFL with document types when displaying details
+- Add Online Help
+- Translate to English

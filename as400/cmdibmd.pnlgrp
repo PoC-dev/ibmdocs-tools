@@ -1,14 +1,35 @@
-.* vim: ft=pnlgrp textwidth=80
-.* CRTMNU MENU(IBMDOCS/CMDIBMD) TYPE(*UIM) SRCFILE(IBMDOCS/SOURCES) INCFILE(QGPL/MENUUIM)
-:PNLGRP.
+.* Copyright 2023 Patrik Schindler <poc@pocnet.net>.
 .*
+.* This file is part of the IBM Documentation Utilities, to be found on
+.* https://github.com/PoC-dev/ibmdocs-tools
+.* see there for further details.
+.*
+.* This is free software; you can redistribute it and/or modify it under the
+.* terms of the GNU General Public License as published by the Free Software
+.* Foundation; either version 2 of the License, or (at your option) any later
+.* version.
+.*
+.* It is distributed in the hope that it will be useful, but WITHOUT ANY
+.* WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+.* A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+.*
+.* You should have received a copy of the GNU General Public License along with
+.* it; if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+.* Suite 330, Boston, MA 02111-1307 USA or get it at
+.* http://www.gnu.org/licenses/gpl.html
+.*
+.* Compile with:
+.* CRTMNU MENU(IBMDOCS/CMDIBMD) TYPE(*UIM) SRCFILE(IBMDOCS/SOURCES) +
+.*  INCFILE(QGPL/MENUUIM)
+.* -----------------------------------------------------------------------------
+:PNLGRP.
 :VAR           NAME=zmenu.
-.* Keylist definition ----------------------------------------------------------
+.* Keylist definition ----------------------------
 :KEYL          NAME=menufkeys
                HELP=fkeyhlp.
 .IM            #FUNCKEYS
 :EKEYL.
-.* Menu Panel definition -------------------------------------------------------
+.* Menu Panel definition -------------------------
 :PANEL         NAME=menu
                HELP=help00
                KEYL=menufkeys
@@ -20,23 +41,42 @@
 :MENUI         OPTION=1
                HELP=help01
                ACTION='CMD QSYS/CALL IBMDOCPG'
-               .Mit Dokumentennummern und Namen arbeiten
+               .Mit Dokumentenmetadaten arbeiten
+:MENUI         OPTION=2
+               HELP=help02
+               ACTION='CMD QSYS/CALL IBMDOCTYPG'
+               .Mit Dokumentenbestandsdaten arbeiten
 :EMENU.
 :CMDLINE       SIZE=long.Auswahl oder Befehl
 :EPANEL.
-.* Help Texts ------------------------------------------------------------------
+.* Help Texts ------------------------------------
 :HELP NAME=help00.IBM-Dokumentenverwaltung - Hilfetext
 :XH3.IBM-Dokumentenverwaltung
-:P.Die IBM-Dokumentenverwaltung ermöglicht das Erfassen von Metadaten zu
-technischer Dokumentation seitens IBM.
+:P.Die IBM-Dokumentenverwaltung dient zur Verwaltung von technischer
+Dokumentation in Form von PDF- und BOOK-Dateien seitens IBM.
+:P.Die hier verfügbare Pflegeoberfläche ist nur ein kleiner Teil der gesamten
+Software. Details finden sich im GitHub repository
+https://github.com/PoC-dev/ibmdocs-tools
 .IM #MENUUSGH
 :EHELP.
 .*
 :HELP NAME=help01.Auswahl 1 - Hilfetext
-:XH3.Auswahl 1. Mit Dokumentennummern und Namen arbeiten
-:P.Diese Auswahl treffen, um mit der Dokumentenverwaltung zu arbeiten.
+:XH3.Auswahl 1. Mit Dokumentenmetadaten arbeiten
+:P.Diese Auswahl treffen, um Metadaten zu Dokumenten zu erfassen oder zu ändern.
+Dies betrifft die Tabelle IBMDOCPF.
+:EHELP.
+.*
+:HELP NAME=help02.Auswahl 2 - Hilfetext
+:XH3.Auswahl 2. Mit Dokumentenbestandsdaten arbeiten
+:P.Diese Auswahl treffen, um manuelle Anpassungen im Dokumentenbestand
+vorzunehmen. Dies betrifft die Tabelle IBMDOCTYPF.
+:NOTE.Der Dokumentenbestand wird mittels externer Software auf einem Linux-Host
+erfasst. Änderungen, die über diese Funktion getätigt werden sind daher als
+temporär zu betrachten.:ENOTE.
 :EHELP.
 .*
 .IM #FUNCKEYSH
-.* -----------------------------------------------------------------------------
+.* -----------------------------------------------
 :EPNLGRP.
+.* For vim ---------------------------------------------------------------------
+.* vim: ft=pnlgrp textwidth=80 colorcolumn=81

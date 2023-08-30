@@ -1,0 +1,34 @@
+put docnbrlf.dds IBMDOCS/SOURCES.DOCNBRLF
+put ibmdocdf.dds IBMDOCS/SOURCES.IBMDOCDF
+put ibmdocpf.dds IBMDOCS/SOURCES.IBMDOCPF
+put ibmdocpg.rpgle IBMDOCS/SOURCES.IBMDOCPG
+put ibmdocpos1.dds IBMDOCS/SOURCES.IBMDOCPOS1
+put ibmdocpos2.dds IBMDOCS/SOURCES.IBMDOCPOS2
+put ibmdocpos3.dds IBMDOCS/SOURCES.IBMDOCPOS3
+put ibmdoctydf.dds IBMDOCS/SOURCES.IBMDOCTYDF
+put ibmdoctyl1.dds IBMDOCS/SOURCES.IBMDOCTYL1
+put ibmdoctyl2.dds IBMDOCS/SOURCES.IBMDOCTYL2
+put ibmdoctyl3.dds IBMDOCS/SOURCES.IBMDOCTYL3
+put ibmdoctypf.dds IBMDOCS/SOURCES.IBMDOCTYPF
+put ibmdoctypg.dds IBMDOCS/SOURCES.IBMDOCTYPG
+put listdocs.c IBMDOCS/SOURCES.LISTDOCS
+put listdocslf.dds IBMDOCS/SOURCES.LISTDOCSLF
+put newdocspf.dds IBMDOCS/SOURCES.NEWDOCSPF
+put TODOS.txt IBMDOCS/SOURCES.BUGS\$TODOS
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(CMDIBMD) SRCTYPE(PNLGRP) TEXT('Menu')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(DOCNBRLF) SRCTYPE(LF) TEXT('For duplicating a rcd for different doc revision')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(IBMDOCDF) SRCTYPE(DSPF) TEXT('Document maintenance display')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(IBMDOCPF) SRCTYPE(PF) TEXT('Main table: Metadata for docs')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(IBMDOCPG) SRCTYPE(RPGLE) TEXT('Document maintenance program')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(IBMDOCPOS1) SRCTYPE(LF) TEXT('PosLF, all records, by docnbr')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(IBMDOCPOS2) SRCTYPE(LF) TEXT('PosLF, all records, by title')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(IBMDOCPOS3) SRCTYPE(LF) TEXT('PosLF, all records, by released')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(IBMDOCTYDF) SRCTYPE(DSPF) TEXT('Document type maintenance display')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(IBMDOCTYL1) SRCTYPE(LF) TEXT('AUX table: PosLF, all records, by docnbr')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(IBMDOCTYL2) SRCTYPE(LF) TEXT('AUX table: PosLF, all records, by date_added')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(IBMDOCTYL3) SRCTYPE(LF) TEXT('AUX table: PosLF, all records, by dlsname')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(IBMDOCTYPF) SRCTYPE(PF) TEXT('AUX table: Doctype and date added per docnbr')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(IBMDOCTYPG) SRCTYPE(RPGLE) TEXT('Document type maintenance program')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(LISTDOCSLF) SRCTYPE(LF) TEXT('CGI: Sort by title, only 1961++')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(LISTDOCS) SRCTYPE(C) TEXT('CGI: List Entries to HTML table')
+quote rcmd CHGPFM FILE(IBMDOCS/SOURCES) MBR(NEWDOCSPF) SRCTYPE(PF) TEXT('Temporary Table for new documents')
