@@ -32,6 +32,9 @@ s/^[0-1][0-9]/[0-3][0-9]/([0-5][0-9]) [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$/20\1/
 - Paste result back to Tables column.
 - Copy/export whole *Tables* table into (tab) text document.
 - FTP to AS/400 IFS (home directory).
+```
+echo "put /home/poc/newdocs.txt /home/poc/newdocs.txt" |ftp myas400
+```
 - Run job to import into the temporary PF:
 ```
 SBMJOB CMD(CPYFRMIMPF FROMSTMF('/home/poc/newdocs.txt') +
@@ -57,7 +60,7 @@ SELECT filename, docnbr FROM newdocspf WHERE filename IN (
  SELECT dlsname FROM ibmdoctypf
 ) ORDER BY docnbr, filename
 ```
-- Show "global" duplicates of document numbers, for obtaining a list to delete file-/dlsnames. Result must be empty.
+- Show "global" duplicates of document numbers, for obtaining a list of to delete file-/dlsnames from the new documents cache. Result must be empty.
 ```
 SELECT filename FROM newdocspf
 WHERE docnbr IN (
@@ -85,4 +88,4 @@ WHERE docnbr IN (
 If you want to upload the files to OS/390, better no not delete them, yet.
 
 ----
-2023-08-27 poc@pocnet.net
+2023-09-04 poc@pocnet.net
