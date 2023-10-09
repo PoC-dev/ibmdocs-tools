@@ -30,7 +30,7 @@ Steps do take before upload can commence.
 ### FTP `~/.netrc` considerations
 The `~/.netrc` file can be used to automate FTP client tasks. Its use is not mandatory but eases repetitive steps.
 
-This is a `~/.netrc` excerpt to tell the FTP server on OS/390 how, and where to put uploaded data:
+This is a `~/.netrc` excerpt to tell the FTP server on OS/390 how, and where to put uploaded data, by mapping DS name components to "virtual" directories:
 ```
 machine p390
 login P390
@@ -59,6 +59,16 @@ To upload documents to OS/390 by FTP, a list of documents (sorted descending by 
 ls -1Ssk |grep -v '^total' > /tmp/books-list.txt
 awk '{print "site PRI=" $1 / 4 "\nput " $2 " " $2 "k"}' < /tmp/books-list.txt > /tmp/books-upload.txt
 ```
+This generates two lines per upload, one for setting the allocation size, and one for the actual upload. Example:
+```
+site PRI=9
+put orvvit3c.boo orvvit3c.book
+site PRI=8
+put zu4gf08t.boo zu4gf08t.book
+…
+```
+Together with the `cd` commands from `.netrc` above, the DS name will be assembled to be `EOY.ENU.BOOKNAME.BOOK`.
+
 In case something went wrong, it might be advisable to convert the given list into a second FTP commands file for deleting uploaded files:
 ```
 awk '{print "del " $2 "k"}' < /tmp/books-list.txt > /tmp/books-delete.txt
