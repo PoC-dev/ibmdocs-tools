@@ -13,12 +13,20 @@ One notable helpful function is the handling of new document releases in regard 
 
 Normally we must manually delete the "empty" record and duplicate the complete one, and write it with a different revision. This is cumbersome manual labour. The application helps this by checking if there is a record already existing with a given DOCNBR and `*BLANKs` in the title. Then it deletes that one, to prevent a primary key conflict. Afterwards, a new record is written.
 
+Please note that the AS/400 UI is currently in German language only.
+
 ----
 ## Preparation.
 For details regarding the handling/uploading of the files in this directory, please refer to the README of my above templates project. You need to
 - create a library for the data: `crtlib ibmdocs` in a 5250 session,
 - create a source physical file to contain the sources within said library: `crtsrcpf ibmdocs/sources rcdlen(112)` in a 5250 session,
 - upload the files: `ftp as400-ip < ftpupload.txt` from your host, assumedly Linux.
+
+**Note:** The applications rely on certain objects from the subfile templates mentioned before:
+- the *genericsmsg* message file (for error message presentation),
+- the menu includes in *qgpl/menuuim*.
+
+Make sure you created those according to the instructions in the subfile template documentation.
 
 ----
 ## Compiling the AS/400 objects.
