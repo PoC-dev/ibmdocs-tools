@@ -42,13 +42,16 @@ SBMJOB CMD(CPYFRMIMPF FROMSTMF('/home/poc/newdocs.txt') +
  JOB(IMPNEWDOCS)
 RMVLNK OBJLNK('/home/poc/newdocs.txt')
 ```
-- Output a list of "local" duplicates sharing the same document number, but with different short names. Result must be empty.
+- Output a list of "local" duplicates sharing the same document number, but with different short (file) names. Result must be empty.
 ```
 SELECT docnbr, COUNT(docnbr) FROM newdocspf
  GROUP BY docnbr
   HAVING COUNT(docnbr) > 1
 ```
-This list is solely to show duplicate document numbers scoped to the new documents database file. Duplicates within the new documents directory have to be cleaned manually!
+This list is solely to show duplicate document numbers scoped to the new documents database file. Duplicates within the new documents directory have to be cleaned manually by using SQL:
+```
+DELETE FROM newdocspf WHERE filename='foobar'
+```
 - Make sure the short names are globally unique also:
 ```
 -- Check if dlsnames are unique: Results must be empty!
@@ -59,6 +62,10 @@ SELECT dlsname, docnbr FROM ibmdoctypf WHERE dlsname IN (
 SELECT filename, docnbr FROM newdocspf WHERE filename IN (
  SELECT dlsname FROM ibmdoctypf
 ) ORDER BY docnbr, filename
+```
+Both output should look similar, if any. Delete the resulting books from the database and filesystem.
+```
+DELETE FROM newdocspf WHERE filename IN ('foobar1', 'foobar2')
 ```
 - Show "global" duplicates of document numbers, for obtaining a list of to delete file-/dlsnames from the new documents cache. Result must be empty.
 ```
@@ -88,4 +95,4 @@ WHERE docnbr IN (
 If you want to upload the files to OS/390, better no not delete them, yet.
 
 ----
-2023-09-04 poc@pocnet.net
+2023-10-19 poc@pocnet.net

@@ -1,4 +1,4 @@
-This directory contains a text-based full-screen application derived from parts of my [German language AS/400 Subfile Template](https://github.com/PoC-dev/as400-sfltemplates-german), and the accompanying table definitions for the script one directory up.
+This directory contains a text-based full-screen application derived from parts of my [AS/400 Subfile Template](https://github.com/PoC-dev/as400-sfltemplates), and the accompanying table definitions for the script one directory up.
 
 ----
 ## License.
@@ -62,4 +62,4 @@ At the moment, I do not provide a menu to run the applications. You can run them
 **Note:** Online help is not yet provided.
 
 ----
-2023-08-30 poc@pocnet.net
+2023-11-27 poc@pocnet.net

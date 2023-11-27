@@ -58,7 +58,7 @@ Along with the data-holding files, there are some *logical files* providing diff
 DDS descriptions for the database files are already found in the as400 subdirectory.
 
 ### The maintenance application
-This is a text-based full-screen application derived from parts of my [German language AS/400 Subfile Template](https://github.com/PoC-dev/as400-sfltemplates-german). It was initially thought as primary means to manually enter metadata for documents.
+This is a text-based full-screen application derived from parts of my [AS/400 Subfile Template](https://github.com/PoC-dev/as400-sfltemplates). It was initially thought as primary means to manually enter metadata for documents.
 
 For further details refer to the [accompanying README](as400/README.md).
 
@@ -100,4 +100,4 @@ This process is modestly complex, and leaves substantial manual labor in copying
 This process is highly complex but leaves no manual labor regarding database metadata updates. See [books-prepare.md](books-prepare.md).
 
 ----
-2023-08-30 poc@pocnet.net
+2023-11-27 poc@pocnet.net

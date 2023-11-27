@@ -7,7 +7,7 @@ This document is part of the IBM Documentation Utilities, to be found on [GitHub
 #### Preface
 PDFs found on some InfoCenter CDs are already - kind of - named by document number. They usually lack the "version" of the document to still fit into the old PC-DOS 8+3 naming scheme. For that, it's not beneficial to use those names compared to the procedure described below.
 
-Also noteworthy is that some PDFs on said InfoCenter CDs have a size of 0 bytes. Sort those out prior to ddoing anything else.
+Also noteworthy is that some PDFs on said InfoCenter CDs have a size of 0 bytes. Sort those out prior to doing anything else.
 ```
 find . -type f -a -name "*.pdf" -a -size 0 -exec rm -v {} \;
 ```
@@ -65,5 +65,9 @@ ls -1 |while read PDF; do pdftotext -f 1 -l 1 ${PDF} $(basename ${PDF} .pdf).txt
 ```
 This is currently under investigation.
 
+**Note:** `ibmdoc-copy-unhandled-pdfs.pl` copies such "unhandled" PDFs being already in the database, but with default values, to separate directory for easier treatment:
+- Empty title,
+- Year of publication 1960.
+
 ----
-2023-08-29 poc@pocnet.net
+2023-11-05 poc@pocnet.net
