@@ -22,5 +22,6 @@
 ls -1 /var/www/default/pages/ibmdocs |grep -E -v \
 	-e '^[A-Z0-9]{3,4}-[0-9]{4,5}-[0-9]{2}[A-Za-z]?(-200[0x])?(-de)?\.(pdf|boo)$' \
 	-e '^360D[-.][0-9]{2}\.[0-9]\.[0-9]{3}\.(pdf|boo)$' \
+	-e '^MPN_5X94-01\.pdf' -e '^SRI-CSL-77-002a\.pdf' \
 	-e '^Y27-7128-03\.pdf$'
 
