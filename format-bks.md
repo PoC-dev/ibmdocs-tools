@@ -5,6 +5,7 @@ The file contains
 - *BOOK* entries. FIXME: Are 0 entries allowed?
 
 FIXME: EBCDIC, or ASCII required?
+FIXME: Are empty lines between blocks mandatory?
 
 ## Header.
 Example:
