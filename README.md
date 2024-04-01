@@ -70,6 +70,7 @@ A short explanation of the files (and directories) contained in this repository,
 - [`books-prepare.md`](books-prepare.md) shows procedures to handle new *BOOK* files, especially large quantities of them.
 - [`os390-bookmgr-notes.md`](os390-bookmgr-notes.md) shows procedures how to make available a large number of *BOOK*s to *BookManager/READ* MVS.
 - [`pdf-prepare.md`](pdf-prepare.md) shows procedures to handle new PDF files, especially large quantities of them.
+- [`format-bks.md`](format-bks.md) contains a preliminary description of the textual *Book Shelf* format.
 
 ### Files
 - *doctable.css* is included in the main HTML table page (documents list) and needs to be accessible to the browser when loading the page.
@@ -100,4 +101,4 @@ This process is modestly complex, and leaves substantial manual labor in copying
 This process is highly complex but leaves no manual labor regarding database metadata updates. See [books-prepare.md](books-prepare.md).
 
 ----
-2023-11-27 poc@pocnet.net
+2024-04-02 poc@pocnet.net
