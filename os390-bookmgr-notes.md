@@ -13,15 +13,22 @@ The visual rendition of text provided by the *IBM Softcopy Reader* isn't particu
 
 The *IBM BookManager BookServer* is incompatible with reverse-proxies, leading to spurious complaints about some temporary file not being found. Also if you open a *BOOK* directly by URL (example `/bookmgr/bookmgr.cgi/BOOKS/GC28-1251-08/CCONTENTS`) the actual *BOOK* being shown is a different one.
 
-Some *BOOK*s contain graphics. Unless there is a character based rendition included (such as with simple flowcharts), these obviously cannot be displayed with text based viewers.
+Some *BOOK*s contain graphics. Unless there is a character based rendition included (such as with simple flowcharts), these obviously cannot be displayed with purely text based viewers.
 
-Using 3270 instead of 5250 has the advantage of providing not just 24 lines of text, but 43 (if configured correctly) - thus giving a better overview.
+Using 3270 instead of 5250 has the advantage of providing not just 24 lines of text, but 43 (if configured correctly) - thus giving a better overview. Many older *BOOK*s are preformatted to be 80 chars wide. Thus, using a 132 character width terminal setting might not provide as beneficial as it seems.
 
 ### License
 This document is part of the IBM Documentation Utilities, to be found on [GitHub](https://github.com/PoC-dev/ibmdocs-tools) - see there for further details. Its content is subject to the [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) license, also known as *Attribution-ShareAlike 4.0 International*.
 
 ### Preface
 Occasionally, there's a more or less large cache of *BOOK* files coming in. Since this is happening in an irregular but frequent manner, I tend to forget how to efficiently handle this situation. This document is primarily meant to serve as a reminder, and copy-paste snippet provider how to prepare/expand the OS/390 environment running in the *Hercules-390* mainframe emulator accordingly. If it helps others, very good!
+
+### Space considerations
+With the current amount of *BOOK*s I have (8 GiB) in tandem with wasted space because of logical blocks not filling the volume's physical blocks entirely, they will no longer fit on a single volume, despite the smaller byte count. You'll get error messages towards the end of the FTP upload.
+
+A solution for this issue is to use *two* volumes for *BOOK*s, and rework the preparations so both volumes will be used roughly equally. One file goes to the first volume, the next to the second, the third to the first, etc.
+
+This has not yet been done and has to wait until a still ongoing, manual, labor-intensive merge process of *BOOK*s with bungled document titles has commenced before.
 
 ----
 ## Preparation
@@ -136,7 +143,7 @@ Unfortunately, *BookManager/READ* has a limit of 2,112 datasets to be listed in 
 
 A Bookshelf can list many more *BOOK* datasets. Thus it's a good idea to add all *BOOK*s to a Bookshelf to have an index readily available.
 
-**Note:** There's a limitation of around 8k BOOKs which can be handled in a given TSO memory region. This is not about the OS running out of memory! Instead, the user's single virtual memory allocation of 31 bits (minus some overhead) is exhausted. No more *BOOK*s can be added to a given Bookshelf. Manually created Bookshelf files will fail to open. Current workaround: None known.
+**Note:** There's a limitation of around 8k *BOOK*s which can be handled in a given TSO memory region. This is not about the OS running out of memory! Instead, the user's single virtual memory allocation of 31 bits (minus some overhead) is exhausted. No more *BOOK*s can be added to a given Bookshelf. Manually created Bookshelf files will fail to open. Current workaround: Don't bother using a single Bookshelf for all *BOOK*s.
 
 The filter mechanism of *BookManager/READ* for listing datasets supports only simple wildcard matches, so in the end you need to iterate through the complete alphabet 26 times to eventually add all datasets to an "allbooks" shelf. So far I'm not aware if it's possible to automate this process.
 
@@ -163,7 +170,7 @@ For now the *Search index* information is not used. At a later point in time, th
 The Bookshelf dataset has been created with default values which is enough to accommodate 2,112 *BOOK* entries. The default parameters in the screen for creating a new Bookshelf suggest that listing *BOOK*s will create a temporary Bookshelf dataset. The space allocated is enough for 2,112 *BOOK* entries.
 
 #### Providing more space
-The Bookshelf file allocation needs to be made larger, so the rest of the *BOOK*s collection can be added to the Bookshelf. To have each and all *BOOK* things on one volume, creating this on the `BOOKS0` DASD might be advisable. Most likely, the default dataset has been allocated on some arbitrary volume, anyway. Correct all of this by running the following JCL:
+The Bookshelf file allocation needs to be made larger, so more *BOOK*s can be added to the Bookshelf. To have each and all *BOOK*s things on one volume, creating this on the `BOOKS0` DASD might be advisable. Most likely, the default dataset has been allocated on some arbitrary volume, anyway. Correct all of this by running the following JCL:
 ```
 //P390CP   JOB  1,P390,NOTIFY=P390
 //CPYDTA   EXEC PGM=IEBGENER
@@ -210,4 +217,4 @@ The next steps are somewhat free-form and highly repetitive. Depending on the fi
 You may choose to use two loops instead: One to create many temporary Bookshelves (alphapbetically descending) and leave them open (Steps 1..3), and in a second run, add the temporary dataset's contents to the main Bookshelf.
 
 ----
-2023-08-30 poc@pocnet.net
+2024-05-30 poc@pocnet.net

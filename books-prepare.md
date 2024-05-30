@@ -88,11 +88,11 @@ WHERE docnbr IN (
 - **VERY IMPORTANT! There shall be no duplicate records!!**
 - **Hint: Leftover UTF-8 characters will cause mysterious SQL errors with causes as "string too long", and "right truncation error".**
 - Probably create a local backup into a save file from the current state of `IBMDOCS`.
-- Run `ibmdoc-merge-docs.pl`. Moves (!) records from *newdocspf* to real destination tables. Moving should make it possible to re-run the script after a forced `die;`. Has not been tested, and would be a good use case for using commitment control on the database tables.
+- Run `ibmdoc-merge-docs.pl`. Moves (!) records from *newdocspf* to real destination tables. Moving should make it possible to re-run the script after a forced `die;`. Has not been tested extensively.
 - When the script has run without error, you can delete the links from `webserver:/var/www/default/pages/books-to-sort/`. **Note:** a `ls -l` should show a *link count* of two for all files there, because `ibmdoc-merge-docs.pl` links the data to a new directory entry with the name of the document number.
 - Finally run `ibmdoc-generate-index.sh` to publish the new database entries to the documents table.
 
 If you want to upload the files to OS/390, better no not delete them, yet.
 
 ----
-2023-10-19 poc@pocnet.net
+2024-05-30 poc@pocnet.net
