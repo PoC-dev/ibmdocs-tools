@@ -23,13 +23,6 @@ This document is part of the IBM Documentation Utilities, to be found on [GitHub
 ### Preface
 Occasionally, there's a more or less large cache of *BOOK* files coming in. Since this is happening in an irregular but frequent manner, I tend to forget how to efficiently handle this situation. This document is primarily meant to serve as a reminder, and copy-paste snippet provider how to prepare/expand the OS/390 environment running in the *Hercules-390* mainframe emulator accordingly. If it helps others, very good!
 
-### Space considerations
-With the current amount of *BOOK*s I have (8 GiB) in tandem with wasted space because of logical blocks not filling the volume's physical blocks entirely, they will no longer fit on a single volume, despite the smaller byte count. You'll get error messages towards the end of the FTP upload.
-
-A solution for this issue is to use *two* volumes for *BOOK*s, and rework the preparations so both volumes will be used roughly equally. One file goes to the first volume, the next to the second, the third to the first, etc.
-
-This has not yet been done and has to wait until a still ongoing, manual, labor-intensive merge process of *BOOK*s with bungled document titles has commenced before.
-
 ----
 ## Preparation
 Steps do take before upload can commence.
@@ -86,11 +79,23 @@ Those files are to be fed to *stdin* of the `ftp` command. See below.
 ## Adding a new volume to OS/390
 I'm roughly using the Jay Moseley instructions about [Adding DASD Volumes](https://www.jaymoseley.com/hercules/installMVS/addingDasdV7.htm).
 
-First, create the new volume on the host side:
+The following table provides information about the most current device type, the 3390.
 ```
-dasdinit64 -bz2 books0-a92 3390-9 BOOKS0
+DT-Mod  |  Cyls | Trk | Bytes per trk   | Total Bytes
+--------+-------+-----+-----------------+----------------------------
+3390-1  |  1113 |  15 | 25,088 - 55,296 |    846,236,160 ( 0.79 GiB)
+3390-2  |  2226 |  15 | 25,088 - 55,296 |  1,692,472,320 ( 1.58 GiB)
+3390-3  |  3339 |  15 | 25,088 - 55,296 |  2,538,708,480 ( 2.36 GiB)
+3390-9  | 10017 |  15 | 56,664          |  8,514,049,320 ( 7.93 GiB)
+3390-27 | 32760 |  15 | 56,664          | 27,844,689,600 (25.93 GiB)
+3390-54 | 65520 |  15 | 56,664          | 55,689,379,200 (51.86 GiB)
 ```
-Obey probable user/group assignments. A 3390-9 provides 8.5 GB of space. See [IBM: Disk Storage Sizes](https://www.ibm.com/docs/en/zvse/6.2?topic=SSB27H_6.2.0/fe6rf_optimizing_casize_disksizes.htm) for a table of possible sizes.
+See [IBM: Disk Storage Sizes](https://www.ibm.com/docs/en/zvse/6.2?topic=SSB27H_6.2.0/fe6rf_optimizing_casize_disksizes.htm) for a table of possible sizes, and relate to the *CKD DEVICES* table in the Hercules documentation [Creating DASD](https://sdl-hercules-390.github.io/html/hercload.html#loading) regarding *devtype-model* to use on the command line.
+First, create the new volume on the host side. Here, we create a 25.93 GiB volume with the less efficient but quicker zlib compression type.
+```
+dasdinit64 -z books0-a92 3390-27 BOOKS0
+```
+Obey probable user/group assignments, so Hercules can access the file when not running as *root*!
 
 ### Make Hercules recognize the new volume
 This can be done online. No need to Re-IPL.
@@ -217,4 +222,4 @@ The next steps are somewhat free-form and highly repetitive. Depending on the fi
 You may choose to use two loops instead: One to create many temporary Bookshelves (alphapbetically descending) and leave them open (Steps 1..3), and in a second run, add the temporary dataset's contents to the main Bookshelf.
 
 ----
-2024-05-30 poc@pocnet.net
+2024-06-02 poc@pocnet.net
