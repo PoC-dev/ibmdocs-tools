@@ -91,6 +91,7 @@ DT-Mod  |  Cyls | Trk | Bytes per trk   | Total Bytes
 3390-54 | 65520 |  15 | 56,664          | 55,689,379,200 (51.86 GiB)
 ```
 See [IBM: Disk Storage Sizes](https://www.ibm.com/docs/en/zvse/6.2?topic=SSB27H_6.2.0/fe6rf_optimizing_casize_disksizes.htm) for a table of possible sizes, and relate to the *CKD DEVICES* table in the Hercules documentation [Creating DASD](https://sdl-hercules-390.github.io/html/hercload.html#loading) regarding *devtype-model* to use on the command line.
+
 First, create the new volume on the host side. Here, we create a 25.93 GiB volume with the less efficient but quicker zlib compression type.
 ```
 dasdinit64 -z books0-a92 3390-27 BOOKS0
