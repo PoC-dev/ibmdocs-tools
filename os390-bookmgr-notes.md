@@ -158,6 +158,7 @@ To add *BOOK*s to a Bookshelf dataset,
 - Press Enter to see the default Bookshelfs list
 - Navigate to the Menubar. Choose *Books* => *3. List books...*
 - Specify the *Data set filter* in the shown input field as `EOY.ENU.*.BOOK` and press enter
+- Press enter to copy the resulting short list into a temporary Bookshelf
 - After some time needed to parse the *BOOK* datasets, a list of the first 2,112 *BOOK*s is presented
 - Navigate to the Menubar. Choose *Group* => *4. Select all*
 - Navigate to the Menubar. Choose *Group* => *1. Put selected books on a bookshelf...*
@@ -223,4 +224,4 @@ The next steps are somewhat free-form and highly repetitive. Depending on the fi
 You may choose to use two loops instead: One to create many temporary Bookshelves (alphapbetically descending) and leave them open (Steps 1..3), and in a second run, add the temporary dataset's contents to the main Bookshelf.
 
 ----
-2024-06-02 poc@pocnet.net
+2024-06-21 poc@pocnet.net
