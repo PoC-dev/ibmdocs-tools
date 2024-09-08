@@ -30,10 +30,7 @@
 #include <errno.h>
 /* https://www.ibm.com/docs/en/rdfi/9.6.0?topic=files-recioh */
 #include <recio.h>
-#include <signal.h>
-#include <sys/signal.h>
 #include <unistd.h>
-#include <qp0ztrc.h>
 
 /* Files ---------------------------------------------------------------------*/
 
@@ -83,12 +80,6 @@ char *fixstr(char *buf, int length) {
 	return(buf);
 }
 
-/* What to do when we receive a SIGTERM. -------------------------------------*/
-
-void set_exit_flag(int signum) {
-    exit_flag = 1;
-}
-
 /* Main. ---------------------------------------------------------------------*/
 
 int main(int argc, char *argv[]) {
@@ -96,14 +87,7 @@ int main(int argc, char *argv[]) {
 	_RIOFB_T *docs_rfb, *type_rfb;
 	IBMDOCS_LISTDOCSLF_CGITBL_i_t docs_data;
 	IBMDOCS_IBMDOCTYPF_DOCTYPTBL_i_t type_data;
-    struct sigaction termaction;
 	unsigned int errcount=0, loopcnt, keylen;
-
-
-    /* Create signal handler for SIGTERM. */
-    memset(&termaction, 0, sizeof(struct sigaction));
-    termaction.sa_handler = set_exit_flag;
-    sigaction(SIGTERM, &termaction, NULL);
 
 
 	/* Prepare HTML headings and other necessary stuff. */
@@ -132,6 +116,7 @@ int main(int argc, char *argv[]) {
 		printf("<p>\n");
 		errcount++;
 	}
+
 	/* Continue if no error happened so far. */
 	if ( errcount == 0 ) {
 		/* Output Table Headings. */
@@ -143,7 +128,7 @@ int main(int argc, char *argv[]) {
 		printf("<th>Released</th><th>Subtitle</th></tr>\n");
 
 		/* Outer loop: Read document, title, etc. */
-		while ( exit_flag == 0 ) {
+		while ( 0 == 0 ) {
 			docs_rfb = _Rreadn(docs_fp, &docs_data, _DOCSRECSZ, __DFT);
 			/* Crude EOF Check. */
 			if (( docs_rfb->num_bytes == EOF )) {
