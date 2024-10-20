@@ -31,6 +31,7 @@
 /* https://www.ibm.com/docs/en/rdfi/9.6.0?topic=files-recioh */
 #include <recio.h>
 #include <unistd.h>
+#include <qp0ztrc.h>
 
 /* Files ---------------------------------------------------------------------*/
 
