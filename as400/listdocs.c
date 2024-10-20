@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Patrik Schindler <poc@pocnet.net>.
+ * Copyright 2021-2024 Patrik Schindler <poc@pocnet.net>.
  *
  * Licensing terms.
  * This is free software; you can redistribute it and/or modify it under the
@@ -58,25 +58,30 @@ void die(char *s) {
 
 /* Zero-terminate fixed-length strings. --------------------------------------*/
 
+/* Note: This code assumes that we always have at least one position left
+ *       to properly zero-terminate the string! Ugly but spares us the need
+ *       to copy the data to a bigger buffer beforehand.
+ * Note: This code changes data in the original buffer!
+ */
+
 char *fixstr(char *buf, int length) {
 	int i;
 
-	/* This should fix completely empty strings quickly.  */
-	if ( buf[0] == ' ' ) {
-		buf[0] = '\0';
+    /* Iterate through the buffer from right to left, and
+     *  set position next to the first non-blank to NUL.
+     */
+    for (i = (length - 1); i >= 0; i--) {
+        if ( buf[i] != ' ' ) {
+            buf[i+1] = 0x0;
+            break;
+        }
+    }
 
-	} else {
-		/* String contains data. Iterate through the buffer
-		 *  from right to left, and,
-		 *  set position next to the first non-blank to NUL.
-		 */
-		for (i = (length - 1); i >= 0; i--) {
-			if ( buf[i] != ' ' ) {
-				buf[i+1] = 0x0;
-				break;
-			}
-		}
-	}
+    /* Safety measure: Set the last position to NUL in any case.
+     * This might have us lose a character but is an indication of the buffer
+     * being too small.
+     */
+    buf[length-1] = 0x0;
 
 	return(buf);
 }
