@@ -24,10 +24,10 @@
      A* Record Format Name -----------------------------------------------------
      A          R DOCTBL
      A* Data fields
-     A            TITLE        180A
-     A            DOCNBR        18A
+     A            TITLE        240A
+     A            DOCNBR        20A
      A            RELEASED       4B 0       DFT(1960)
-     A            SUBTITLE     180A         ALWNULL
+     A            SUBTITLE     240A         ALWNULL
      A* Index field(s)
      A          K DOCNBR
      A* For vim ----------------------------------------------------------------

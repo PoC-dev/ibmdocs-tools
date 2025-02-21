@@ -264,6 +264,7 @@
      C                   MOVEL     POSTO         C_TITLE
      C     C_TITLE       SETLL     FWDPOS2                            72
      C     SORTKEY       WHENEQ    2
+     C* FIXME: RELEASED is a binary field, not text. Hum?
      C                   MOVEL     *BLANK        C_RELEASED
      C                   MOVEL     POSTO         C_RELEASED
      C     C_RELEASED    SETLL     FWDPOS3                            72

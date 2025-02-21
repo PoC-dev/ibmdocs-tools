@@ -33,10 +33,10 @@
      A  99                                  DSPATR(RI)
      A*         ##Pull values from the table definition itself...
      A            DOCNBR    R        O  9  7
-     A            DOCTYPE   R        O  9 28
-     A            DATE_ADDEDR     D  O  9 32
+     A            DOCTYPE   R        O  9 30
+     A            DATE_ADDEDR     D  O  9 34
      A  36                                  DSPATR(ND)
-     A            DLSNAME   R        O  9 45
+     A            DLSNAME   R        O  9 47
      A* Subfile Control Screen -------------------------------------------------
      A          R MAINCTL                   SFLCTL(MAINSFL)
      A                                      CHGINPDFT(LC UL)
@@ -89,11 +89,11 @@
      A                                  1 30'Dokument-Typenliste'
      A                                      DSPATR(HI)
      A                                  3  7'Listenanfang bei . . .'
-     A            POSTO         18A  I  3 32
+     A            POSTO         20A  I  3 31
      A  41                                  DSPATR(PC)
-     A  50                              3 53'(Dokumentnummer)'
-     A  51                              3 53'(Hinzugefügt)'
-     A  52                              3 53'(DOS-Name)'
+     A  50                              3 54'(Dokumentnummer)'
+     A  51                              3 54'(Hinzugefügt)'
+     A  52                              3 54'(DOS-Name)'
      A                                  5  2'Auswahl eingeben und -
      A                                      Eingabetaste drücken.'
      A                                      COLOR(BLU)
@@ -104,10 +104,10 @@
      A                                  8  2'Opt' DSPATR(HI) HLPID(1)
      A                                  8  7'Dokumentnummer' DSPATR(HI) HLPID(2)
      A  50                                  DSPATR(UL)
-     A                                  8 27'Typ' DSPATR(HI) HLPID(3)
-     A                                  8 32'Hinzugefügt' DSPATR(HI) HLPID(4)
+     A                                  8 29'Typ' DSPATR(HI) HLPID(3)
+     A                                  8 34'Hinzugefügt' DSPATR(HI) HLPID(4)
      A  51                                  DSPATR(UL)
-     A                                  8 45'DOS-Name' DSPATR(HI) HLPID(5)
+     A                                  8 47'DOS-Name' DSPATR(HI) HLPID(5)
      A  52                                  DSPATR(UL)
      A* Footer of the form -----------------------------------------------------
      A* A subfile control record may contain elements above or below the actual
@@ -140,10 +140,10 @@
      A*         ##Pull values from the table definition itself...
      A*           You can also use REFFLD(MAINSFL/FLDNAME *SRC)
      A            DOCNBR    R        O  7  7
-     A            DOCTYPE   R        O  7 28
-     A            DATE_ADDEDR     D  O  7 32
+     A            DOCTYPE   R        O  7 30
+     A            DATE_ADDEDR     D  O  7 34
      A  36                                  DSPATR(ND)
-     A            DLSNAME   R        O  7 45
+     A            DLSNAME   R        O  7 47
      A* Subfile Control Screen -------------------------------------------------
      A          R DLTCTL                    SFLCTL(DLTSFL)
      A*                                   ##Command Key definitions.
@@ -182,9 +182,9 @@
      A                                      COLOR(BLU)
      A                                  6  2'Opt' DSPATR(HI) HLPID(1)
      A                                  6  7'Docnbr' DSPATR(HI) HLPID(2)
-     A                                  6 27'Typ' DSPATR(HI) HLPID(3)
-     A                                  6 32'Hinz.' DSPATR(HI) HLPID(4)
-     A                                  6 45'DOS-Name' DSPATR(HI) HLPID(5)
+     A                                  6 29'Typ' DSPATR(HI) HLPID(3)
+     A                                  6 34'Hinz.' DSPATR(HI) HLPID(4)
+     A                                  6 47'DOS-Name' DSPATR(HI) HLPID(5)
      A* Footer of the form -----------------------------------------------------
      A* A subfile control record may contain elements above or below the actual
      A* subfile, but not both.
@@ -221,7 +221,7 @@
      A          H                           HLPARA(3 1 3 80)
      A                                      HLPPNLGRP('DETAIL/OPTIONS'
      A                                      IBMDDTLTHP)
-     A          H                           HLPARA(5 1 5 43)
+     A          H                           HLPARA(5 1 5 45)
      A                                      HLPPNLGRP('DFIELD/DOCNBR'
      A                                      IBMDDTLTHP)
      A          H                           HLPARA(7 1 7 26)

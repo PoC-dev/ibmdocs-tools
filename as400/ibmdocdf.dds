@@ -33,7 +33,7 @@
      A  99                                  DSPATR(RI)
      A*         ##Pull values from the table definition itself...
      A            DOCNBR    R        O  9  7
-     A            TITLE$        43A  O  9 27
+     A            TITLE$        41A  O  9 29
      A            RELEASED  R        O  9 72EDTCDE(3)
      A            DOCTYPE$       2A  O  9 78
      A* Subfile Control Screen -------------------------------------------------
@@ -87,11 +87,11 @@
      A                                  1 30'Dokumentenverwaltung'
      A                                      DSPATR(HI)
      A                                  3  7'Listenanfang bei'
-     A            POSTO         33A  I  3 27
+     A            POSTO         33A  I  3 25
      A  41                                  DSPATR(PC)
-     A  50                              3 64'(Dokumentnummer)'
-     A  51                              3 64'(Titel)'
-     A  52                              3 64'(Jahr)'
+     A  50                              3 62'(Dokumentnummer)'
+     A  51                              3 62'(Titel)'
+     A  52                              3 62'(Jahr)'
      A                                  5  2'Auswahl eingeben und -
      A                                      Eingabetaste drücken.'
      A                                      COLOR(BLU)
@@ -104,7 +104,7 @@
      A                                  8  2'Opt' DSPATR(HI) HLPID(1)
      A                                  8  7'Dokumentnummer' DSPATR(HI) HLPID(2)
      A  50                                  DSPATR(UL)
-     A                                  8 27'Titel' DSPATR(HI) HLPID(3)
+     A                                  8 29'Titel' DSPATR(HI) HLPID(3)
      A  51                                  DSPATR(UL)
      A                                  8 72'Jahr' DSPATR(HI) HLPID(4)
      A  52                                  DSPATR(UL)
@@ -139,7 +139,7 @@
      A  99                                  DSPATR(RI)
      A*         ##Pull values from the table definition itself...
      A            DOCNBR    R        O  7  7
-     A            TITLE$    R        O  7 27REFFLD(MAINSFL/TITLE$ *SRC)
+     A            TITLE$    R        O  7 29REFFLD(MAINSFL/TITLE$ *SRC)
      A            RELEASED  R        O  7 72EDTCDE(3)
      A            DOCTYPE$       2A  O  7 78
      A* Subfile Control Screen -------------------------------------------------
@@ -180,7 +180,7 @@
      A                                      COLOR(BLU)
      A                                  6  2'Opt' DSPATR(HI) HLPID(1)
      A                                  6  7'Dokument' DSPATR(HI)
-     A                                  6 27'Titel' DSPATR(HI)
+     A                                  6 29'Titel' DSPATR(HI)
      A                                  6 72'Jahr' DSPATR(HI)
      A                                  6 78'FT' DSPATR(HI)
      A* Footer of the form -----------------------------------------------------
@@ -220,12 +220,12 @@
      A                                      IBMDDTLHP)
      A          H                           HLPARA(5 1 5 38)
      A                                      HLPPNLGRP('DFIELD/DOCNBR' IBMDDTLHP)
-     A          H                           HLPARA(7 1 9 80)
+     A          H                           HLPARA(7 1 10 80)
      A                                      HLPPNLGRP('DFIELD/TITLE' IBMDDTLHP)
-     A          H                           HLPARA(11 1 11 24)
+     A          H                           HLPARA(12 1 12 24)
      A                                      HLPPNLGRP('DFIELD/RELEASED'
      A                                      IBMDDTLHP)
-     A          H                           HLPARA(12 1 15 80)
+     A          H                           HLPARA(14 1 17 80)
      A                                      HLPPNLGRP('DFIELD/SUBTITLE'
      A                                      IBMDDTLHP)
      A*         ##End of definitions. Here be real screen elements.
@@ -254,20 +254,20 @@
      A  44                                  DSPATR(PR)
      A N44                                  DSPATR(UL)
      A N44 61                               DSPATR(PC)
-     A                                 11  3'Erschienen . . .'
-     A            RELEASED  R     Y  B 11 21EDTCDE(3)
+     A                                 12  3'Erschienen . . .'
+     A            RELEASED  R     Y  B 12 21EDTCDE(3)
      A  44                                  DSPATR(PR)
      A N44                                  DSPATR(UL)
      A N44 62                               DSPATR(PC)
-     A                                 13  3'Subtitel . . . .'
-     A            SUBTITLE  R        B 13 21CNTFLD(60)
+     A                                 14  3'Subtitel . . . .'
+     A            SUBTITLE  R        B 14 21CNTFLD(60)
      A  44                                  DSPATR(PR)
      A N44                                  DSPATR(UL)
      A N44 63                               DSPATR(PC)
      A*
      A* This is entirely to prevent DSPATR(RI) error indication with just a
      A*  warning message. Place in least used screen position.
-     A            DUMMY$$        1A  O 17 80DSPATR(ND)
+     A            DUMMY$$        1A  O 24 80DSPATR(ND)
      A  91                                  ERRMSGID(ERR0012 GENERICMSG 91)
      A  93                                  ERRMSGID(ERR1218 GENERICMSG 93)
      A  94                                  ERRMSGID(RDO1218 GENERICMSG 94)
