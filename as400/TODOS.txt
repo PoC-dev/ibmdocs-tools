@@ -1,3 +1,6 @@
+- Bug: Search for GA21-9331 and select both entries with 2,
+       then press enter twice: Crash. Debug says: Problem in DETAILCT
+       But that's currently unused?
 - Show SFL with document types when displaying details
 - Add Online Help
 - Translate to English
