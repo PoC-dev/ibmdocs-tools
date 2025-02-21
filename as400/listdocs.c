@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Patrik Schindler <poc@pocnet.net>.
+ * Copyright 2021-2025 Patrik Schindler <poc@pocnet.net>.
  *
  * Licensing terms.
  * This is free software; you can redistribute it and/or modify it under the
@@ -22,6 +22,7 @@
  * - Do not add .PGM suffix
  *
  * Compile with Option 14 + additional: PGM(CGIBIN/LISTDOCS) OPTIMIZE(*FULL)
+ * For looking at generated file include headers, add OPTION(*SHOWUSR)
  */
 
 #include <stdio.h>
@@ -36,10 +37,12 @@
 /* Files ---------------------------------------------------------------------*/
 
 /* Important! This statement is about the compiled object, not the source! */
-#pragma mapinc("LISTDOCSLF", "IBMDOCS/LISTDOCSLF(CGITBL)", "input", "_P", "")
+#pragma mapinc("LISTDOCSLF", "IBMDOCS/LISTDOCSLF(CGITBL)", "input nullflds", \
+"_P", "")
 #include "LISTDOCSLF"
 #define _DOCSRECSZ sizeof(docs_data)
-#pragma mapinc("IBMDOCTYPF", "IBMDOCS/IBMDOCTYPF(DOCTYPTBL)", "input", "_P", "")
+#pragma mapinc("IBMDOCTYPF", "IBMDOCS/IBMDOCTYPF(DOCTYPTBL)", \
+"input nullflds", "_P", "")
 #include "IBMDOCTYPF"
 #define _TYPERECSZ sizeof(type_data)
 
@@ -77,12 +80,6 @@ char *fixstr(char *buf, int length) {
         }
     }
 
-    /* Safety measure: Set the last position to NUL in any case.
-     * This might have us lose a character but is an indication of the buffer
-     * being too small.
-     */
-    buf[length-1] = 0x0;
-
 	return(buf);
 }
 
@@ -92,7 +89,10 @@ int main(int argc, char *argv[]) {
 	_RFILE *docs_fp, *type_fp;
 	_RIOFB_T *docs_rfb, *type_rfb;
 	IBMDOCS_LISTDOCSLF_CGITBL_i_t docs_data;
+    IBMDOCS_LISTDOCSLF_CGITBL_nmap_t docs_data_nullfld;
 	IBMDOCS_IBMDOCTYPF_DOCTYPTBL_i_t type_data;
+    IBMDOCS_IBMDOCTYPF_DOCTYPTBL_nmap_t type_data_nullfld;
+    char date_added[12];    /* Orig. field is too small for '\0' termination. */
 	unsigned int errcount=0, loopcnt, keylen;
 
 
@@ -149,7 +149,7 @@ int main(int argc, char *argv[]) {
 			/* Need to fix this just once,
              * because we change the original buffer.
             */
-			printf("<td><b>%s</b><ul>", fixstr(docs_data.DOCNBR, 18));
+			printf("<td><b>%s</b><ul>", fixstr(docs_data.DOCNBR, 20));
 
 			/* Required for _Rreadk(). */
 			keylen = strlen(docs_data.DOCNBR);
@@ -179,10 +179,9 @@ int main(int argc, char *argv[]) {
 \"/bookmgr/bookmgr.cgi/BOOKS/%s/CCONTENTS\" target=\"_blank\">BOOK</a>",
                         docs_data.DOCNBR);
 
-                    fixstr(type_data.DLSNAME, 10);
-
-                    if ( strlen(type_data.DLSNAME) > 0 ) {
-                        printf(" (%s)", type_data.DLSNAME);
+                    /* Only output field if not NULL. */
+                    if (type_data_nullfld.DLSNAME != '1') {
+                        printf(" (%s)", fixstr(type_data.DLSNAME, 10));
                     }
 
 				} else if ( (strncmp(type_data.DOCTYPE, "P", 1) == 0) ) {
@@ -190,10 +189,10 @@ int main(int argc, char *argv[]) {
                         docs_data.DOCNBR);
 				}
 			
-				/* Field is NULL. FIXME: We should check this properly. */
-				if ( strncmp(fixstr(type_data.DATE_ADDED, 10), "0001-01-01",
-                        10) != 0 ) {
-					printf(" (%s)", type_data.DATE_ADDED);
+                /* Only output field if not NULL. */
+                if (type_data_nullfld.DATE_ADDED != '1') {
+                    strncpy(date_added, type_data.DATE_ADDED, 10);
+					printf(" (%s)", date_added);
 				}
 
 				loopcnt++;
@@ -201,9 +200,15 @@ int main(int argc, char *argv[]) {
 			printf("</ul></td>");
 
 			/* Output remaining data (title, etc.). */
-			printf("<td>%s</td>", fixstr(docs_data.TITLE, 180));
+			printf("<td>%s</td>", fixstr(docs_data.TITLE, 240));
 			printf("<td>%d</td>", docs_data.RELEASED);
-			printf("<td>%s</td>", fixstr(docs_data.SUBTITLE, 180));
+
+            /* Only output space if NULL, or field if not. */
+            if (docs_data_nullfld.SUBTITLE == '1') {
+                printf("<td>&nbsp;</td>");
+            } else {
+                printf("<td>%s</td>", fixstr(docs_data.SUBTITLE, 240));
+            }
 
 			printf("</tr>\n");
 		}
@@ -225,7 +230,7 @@ BookServer</a>. The raw components are available on \
 <a href=\"https://github.com/cyberdotgent/bookmgr-docker\">GitHub</a>.<p>\n");
 	printf("Contact me: \
 <a href=\"mailto:webhamster@pocnet.net\">webhamster@pocnet.net</a>\n");
-	printf("Program version 2023-08-26.<p>\n</body>\n</html>\n");
+	printf("Program version 2025-02-21.<p>\n</body>\n</html>\n");
 	return(0);
 }
 
