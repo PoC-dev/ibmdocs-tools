@@ -68,7 +68,7 @@ void die(char *s) {
  */
 
 char *fixstr(char *buf, int length) {
-	int i;
+    int i;
 
     /* Iterate through the buffer from right to left, and
      *  set position next to the first non-blank to NUL.
@@ -80,102 +80,102 @@ char *fixstr(char *buf, int length) {
         }
     }
 
-	return(buf);
+    return(buf);
 }
 
 /* Main. ---------------------------------------------------------------------*/
 
 int main(int argc, char *argv[]) {
-	_RFILE *docs_fp, *type_fp;
-	_RIOFB_T *docs_rfb, *type_rfb;
-	IBMDOCS_LISTDOCSLF_CGITBL_i_t docs_data;
+    _RFILE *docs_fp, *type_fp;
+    _RIOFB_T *docs_rfb, *type_rfb;
+    IBMDOCS_LISTDOCSLF_CGITBL_i_t docs_data;
     IBMDOCS_LISTDOCSLF_CGITBL_nmap_t docs_data_nullfld;
-	IBMDOCS_IBMDOCTYPF_DOCTYPTBL_i_t type_data;
+    IBMDOCS_IBMDOCTYPF_DOCTYPTBL_i_t type_data;
     IBMDOCS_IBMDOCTYPF_DOCTYPTBL_nmap_t type_data_nullfld;
     char date_added[12];    /* Orig. field is too small for '\0' termination. */
-	unsigned int errcount=0, loopcnt, keylen;
+    unsigned int errcount=0, loopcnt, keylen;
 
 
-	/* Prepare HTML headings and other necessary stuff. */
-	printf("Content-type: text/html\n\n");
-	printf("<!DOCTYPE HTML>\n");
-	printf("<html>\n<head>\n\t<title>IBM Documents List</title>\n");
-	printf("\t<meta name=\"author\" content=\"Patrik Schindler\">\n");
-	printf("\t<meta http-equiv=\"content-type\" content=\"text/html;");
+    /* Prepare HTML headings and other necessary stuff. */
+    printf("Content-type: text/html\n\n");
+    printf("<!DOCTYPE HTML>\n");
+    printf("<html>\n<head>\n\t<title>IBM Documents List</title>\n");
+    printf("\t<meta name=\"author\" content=\"Patrik Schindler\">\n");
+    printf("\t<meta http-equiv=\"content-type\" content=\"text/html;");
     printf(" charset=iso-8859-1\">\n");
-	printf("\t<link rel=\"stylesheet\" type=\"text/css\"");
+    printf("\t<link rel=\"stylesheet\" type=\"text/css\"");
     printf(" href=\"doctable.css\">\n");
-	printf("</head>\n\n");
-	printf("<body bgcolor=\"#FFFFFF\" link=\"#333399\" vlink=\"#333399\"");
+    printf("</head>\n\n");
+    printf("<body bgcolor=\"#FFFFFF\" link=\"#333399\" vlink=\"#333399\"");
     printf(" alink=\"#333399\">\n");
 
-	/* Open file only with updating the number of read bytes in _RIOFB_T */
-	if (( docs_fp = _Ropen ("IBMDOCS/LISTDOCSLF", "rr, blkrcd=y, nullcap=y, \
+    /* Open file only with updating the number of read bytes in _RIOFB_T */
+    if (( docs_fp = _Ropen ("IBMDOCS/LISTDOCSLF", "rr, blkrcd=y, nullcap=y, \
             riofb=n")) == NULL) {
-		perror("Error opening file:");
-		printf("<p>\n");
-		errcount++;
-	}
-	if (( type_fp = _Ropen ("IBMDOCS/IBMDOCTYPF", "rr, blkrcd=y, nullcap=y, \
+        perror("Error opening file:");
+        printf("<p>\n");
+        errcount++;
+    }
+    if (( type_fp = _Ropen ("IBMDOCS/IBMDOCTYPF", "rr, blkrcd=y, nullcap=y, \
             riofb=n")) == NULL) {
-		perror("Error opening file:");
-		printf("<p>\n");
-		errcount++;
-	}
+        perror("Error opening file:");
+        printf("<p>\n");
+        errcount++;
+    }
 
-	/* Continue if no error happened so far. */
-	if ( errcount == 0 ) {
-		/* Output Table Headings. */
-		printf("<table>\n");
-		printf("<colgroup><col class=\"docnbr\" /><col class=\"titles\" />");
+    /* Continue if no error happened so far. */
+    if ( errcount == 0 ) {
+        /* Output Table Headings. */
+        printf("<table>\n");
+        printf("<colgroup><col class=\"docnbr\" /><col class=\"titles\" />");
         printf("<col class=\"year\" /><col class=\"titles\" /></colgroup>\n");
-		printf("<tr><th>Document:<br>Number, format, date added</th>");
+        printf("<tr><th>Document:<br>Number, format, date added</th>");
         printf("<th>Title</th>");
-		printf("<th>Released</th><th>Subtitle</th></tr>\n");
+        printf("<th>Released</th><th>Subtitle</th></tr>\n");
 
-		/* Outer loop: Read document, title, etc. */
-		while ( 0 == 0 ) {
-			docs_rfb = _Rreadn(docs_fp, &docs_data, _DOCSRECSZ, __DFT);
-			/* Crude EOF Check. */
-			if (( docs_rfb->num_bytes == EOF )) {
-				break;
-			} else if (( docs_rfb->num_bytes < _DOCSRECSZ )) {
+        /* Outer loop: Read document, title, etc. */
+        while ( 0 == 0 ) {
+            docs_rfb = _Rreadn(docs_fp, &docs_data, _DOCSRECSZ, __DFT);
+            /* Crude EOF Check. */
+            if (( docs_rfb->num_bytes == EOF )) {
+                break;
+            } else if (( docs_rfb->num_bytes < _DOCSRECSZ )) {
                 printf(" <!-- Error: %s in outer loop -->\n",
                     strerror(errno));
-				break;
-			}
-			printf("<tr>");
+                break;
+            }
+            printf("<tr>");
 
-			/* Need to fix this just once,
+            /* Need to fix this just once,
              * because we change the original buffer.
             */
-			printf("<td><b>%s</b><ul>", fixstr(docs_data.DOCNBR, 20));
+            printf("<td><b>%s</b><ul>", fixstr(docs_data.DOCNBR, 20));
 
-			/* Required for _Rreadk(). */
-			keylen = strlen(docs_data.DOCNBR);
+            /* Required for _Rreadk(). */
+            keylen = strlen(docs_data.DOCNBR);
 
-			loopcnt = 0;
-			/* Inner loop: Lookup document type(s) for the given document id. */
-			while ( exit_flag == 0 ) {
-				if ( loopcnt == 0 ) {
-					/* If this is our first iteration, do a CHAIN. */
-					type_rfb = _Rreadk(type_fp, &type_data, _TYPERECSZ, __DFT,
+            loopcnt = 0;
+            /* Inner loop: Lookup document type(s) for the given document id. */
+            while ( exit_flag == 0 ) {
+                if ( loopcnt == 0 ) {
+                    /* If this is our first iteration, do a CHAIN. */
+                    type_rfb = _Rreadk(type_fp, &type_data, _TYPERECSZ, __DFT,
                         docs_data.DOCNBR, keylen);
-				} else {
-					/* If we already CHAINed, now use READE. */
-					type_rfb = _Rreadk(type_fp, &type_data, _TYPERECSZ,
+                } else {
+                    /* If we already CHAINed, now use READE. */
+                    type_rfb = _Rreadk(type_fp, &type_data, _TYPERECSZ,
                         __KEY_NEXTEQ, "", keylen);
-				}
+                }
 
-				/* Crude EOF Check. */
-				if (( type_rfb->num_bytes == EOF ||
+                /* Crude EOF Check. */
+                if (( type_rfb->num_bytes == EOF ||
                         type_rfb->num_bytes < _TYPERECSZ )) {
-					break;
-				}
+                    break;
+                }
 
-				/* Output document type according to the type flags. */
-				if ( (strncmp(type_data.DOCTYPE, "B", 1) == 0) ) {
-					printf("<li><a href=\
+                /* Output document type according to the type flags. */
+                if ( (strncmp(type_data.DOCTYPE, "B", 1) == 0) ) {
+                    printf("<li><a href=\
 \"/bookmgr/bookmgr.cgi/BOOKS/%s/CCONTENTS\" target=\"_blank\">BOOK</a>",
                         docs_data.DOCNBR);
 
@@ -184,25 +184,25 @@ int main(int argc, char *argv[]) {
                         printf(" (%s)", fixstr(type_data.DLSNAME, 10));
                     }
 
-				} else if ( (strncmp(type_data.DOCTYPE, "P", 1) == 0) ) {
-					printf("<li><a href=\"%s.pdf\">PDF</a>",
+                } else if ( (strncmp(type_data.DOCTYPE, "P", 1) == 0) ) {
+                    printf("<li><a href=\"%s.pdf\">PDF</a>",
                         docs_data.DOCNBR);
-				}
-			
+                }
+
                 /* Only output field if not NULL. */
                 if (type_data_nullfld.DATE_ADDED != '1') {
                     strncpy(date_added, type_data.DATE_ADDED, 10);
                     date_added[10] = '\0';
-					printf(" (%s)", date_added);
-				}
+                    printf(" (%s)", date_added);
+                }
 
-				loopcnt++;
-			}
-			printf("</ul></td>");
+                loopcnt++;
+            }
+            printf("</ul></td>");
 
-			/* Output remaining data (title, etc.). */
-			printf("<td>%s</td>", fixstr(docs_data.TITLE, 240));
-			printf("<td>%d</td>", docs_data.RELEASED);
+            /* Output remaining data (title, etc.). */
+            printf("<td>%s</td>", fixstr(docs_data.TITLE, 240));
+            printf("<td>%d</td>", docs_data.RELEASED);
 
             /* Only output space if NULL, or field if not. */
             if (docs_data_nullfld.SUBTITLE == '1') {
@@ -211,28 +211,28 @@ int main(int argc, char *argv[]) {
                 printf("<td>%s</td>", fixstr(docs_data.SUBTITLE, 240));
             }
 
-			printf("</tr>\n");
-		}
-		printf("</table><p>\n");
-		_Rclose(type_fp);
-		_Rclose(docs_fp);
-	}
-	printf("Documents provided have been obtained from the sunsetted IBM \
+            printf("</tr>\n");
+        }
+        printf("</table><p>\n");
+        _Rclose(type_fp);
+        _Rclose(docs_fp);
+    }
+    printf("Documents provided have been obtained from the sunsetted IBM \
 public document library server, and other sources. They are replicated \
 here as a convenient place to find IBM documentation for mostly older \
 products. Copyrights are retained as outlined in the individual \
 documents.<p>\n");
-	printf("Thanks to my Dad, Iain, and his Mom for helping with providing \
+    printf("Thanks to my Dad, Iain, and his Mom for helping with providing \
 content for the initial index table. Thanks to the Bitsavers project for \
 its incredible service to the community!<p>\n");
-	printf("You can read BOOK files with the aid of the \
+    printf("You can read BOOK files with the aid of the \
 <a href=\"https://leela.pocnet.net/bookmgr/bookmgr.cgi\">IBM BookManager \
 BookServer</a>. The raw components are available on \
 <a href=\"https://github.com/cyberdotgent/bookmgr-docker\">GitHub</a>.<p>\n");
-	printf("Contact me: \
+    printf("Contact me: \
 <a href=\"mailto:webhamster@pocnet.net\">webhamster@pocnet.net</a>\n");
-	printf("Program version 2025-02-21.<p>\n</body>\n</html>\n");
-	return(0);
+    printf("Program version 2025-02-26.<p>\n</body>\n</html>\n");
+    return(0);
 }
 
 /* -----------------------------------------------------------------------------
