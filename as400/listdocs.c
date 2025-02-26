@@ -192,6 +192,7 @@ int main(int argc, char *argv[]) {
                 /* Only output field if not NULL. */
                 if (type_data_nullfld.DATE_ADDED != '1') {
                     strncpy(date_added, type_data.DATE_ADDED, 10);
+                    date_added[10] = '\0';
 					printf(" (%s)", date_added);
 				}
 
