@@ -56,7 +56,7 @@ See [Using PDFs and BookManager Books on your workstation or mainframe](https://
 ### Generating the FTP Upload-List
 To upload documents to OS/390 by FTP, a list of documents (sorted descending by size for better allocation efficiency) and their sizes have to be compiled. The sizes output is used to allocate the required space individually for each dataset. *BOOK* files are by nature padded to 4k blocks anyway, so a simple division suffices. This list is then converted into FTP commands:
 ```
-ls -1Ssk |grep -v '^total' > /tmp/books-list.txt
+ls -1Ssk |grep -v '^total' |grep -iv '^eo[xy]0[0-9]mst\.boo$' > /tmp/books-list.txt
 awk '{print "site PRI=" $1 / 4 "\nput " $2 " " $2 "k"}' < /tmp/books-list.txt > /tmp/books-upload.txt
 ```
 This generates two lines per upload, one for setting the allocation size, and one for the actual upload. Example:
@@ -68,6 +68,8 @@ put zu4gf08t.boo zu4gf08t.book
 …
 ```
 Together with the `cd` commands from `.netrc` above, the DS name will be assembled to be `EOY.ENU.BOOKNAME.BOOK`.
+
+Above, certain books are eliminated by `grep` from being handled. Those are part of the BookManager/READ install on OS/390.
 
 In case something went wrong, it might be advisable to convert the given list into a second FTP commands file for deleting uploaded files:
 ```
