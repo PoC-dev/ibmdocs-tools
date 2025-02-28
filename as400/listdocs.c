@@ -189,8 +189,12 @@ int main(int argc, char *argv[]) {
                         docs_data.DOCNBR);
                 }
 
-                /* Only output field if not NULL. */
-                if (type_data_nullfld.DATE_ADDED != '1') {
+                /* Only output field if not NULL.
+                 * FIXME: This just doesn't work. Date field is output always
+                 * when checking just type_data_nullfld.DATE_ADDED.
+                 */
+                if (type_data_nullfld.DATE_ADDED != '1' ||
+                        strncmp(type_data.DATE_ADDED, "0001-01-01",10) != 0) {
                     strncpy(date_added, type_data.DATE_ADDED, 10);
                     date_added[10] = '\0';
                     printf(" (%s)", date_added);
@@ -231,7 +235,7 @@ BookServer</a>. The raw components are available on \
 <a href=\"https://github.com/cyberdotgent/bookmgr-docker\">GitHub</a>.<p>\n");
     printf("Contact me: \
 <a href=\"mailto:webhamster@pocnet.net\">webhamster@pocnet.net</a>\n");
-    printf("Program version 2025-02-26.<p>\n</body>\n</html>\n");
+    printf("Program version 2025-02-28.<p>\n</body>\n</html>\n");
     return(0);
 }
 
