@@ -54,7 +54,7 @@ Note that an empty line **must** be added to the end of a `.netrc` stanza.
 See [Using PDFs and BookManager Books on your workstation or mainframe](https://www.ibm.com/support/pages/using-pdfs-and-bookmanager-books-your-workstation-or-mainframe) for some hints about uploading *BOOK* files, and related data. To get help for the given parameters, use your FTP client, connect to the OS/390 instance in question, and issue a `quote help site` to get a long text describing the parameters I've used. And many more.
 
 ### Generating the FTP Upload-List
-To upload documents to OS/390 by FTP, a list of documents (sorted descending by size for better allocation efficiency) and their sizes have to be compiled. The sizes output is used to allocate the required space individually for each dataset. *BOOK* files are by nature padded to 4k blocks anyway, so a simple division suffices. This list is then converted into FTP commands:
+To upload documents to OS/390 by FTP, a list of documents (sorted descending by size for better allocation efficiency) and their sizes have to be compiled. The sizes output is used to allocate the required space individually for each dataset. *BOOK* files are by nature padded to 4 KiB blocks anyway, so a simple division suffices. This list is then converted into FTP commands:
 ```
 ls -1Ssk |grep -v '^total' |grep -iv '^eo[xy]0[0-9]mst\.boo$' > /tmp/books-list.txt
 awk '{print "site PRI=" $1 / 4 "\nput " $2 " " $2 "k"}' < /tmp/books-list.txt > /tmp/books-upload.txt
