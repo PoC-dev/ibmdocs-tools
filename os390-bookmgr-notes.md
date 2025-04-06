@@ -23,6 +23,8 @@ This document is part of the IBM Documentation Utilities, to be found on [GitHub
 ### Preface
 Occasionally, there's a more or less large cache of *BOOK* files coming in. Since this is happening in an irregular but frequent manner, I tend to forget how to efficiently handle this situation. This document is primarily meant to serve as a reminder, and copy-paste snippet provider how to prepare/expand the OS/390 environment running in the *Hercules-390* mainframe emulator accordingly. If it helps others, very good!
 
+**Note**: OS/390 ADCD 2.10 is partly incompatible with large 3390 DASDs. Hence, this document shows how to spread *BOOK*s over several smaller DASD volumes.
+
 ----
 ## Preparation
 Steps do take before upload can commence.
@@ -46,7 +48,7 @@ macdef init
  site SEC
  cd ..
  cd EOY
- cd ENU
+ cd BOOKS
 
 ```
 Note that an empty line **must** be added to the end of a `.netrc` stanza.
@@ -56,77 +58,100 @@ See [Using PDFs and BookManager Books on your workstation or mainframe](https://
 ### Generating the FTP Upload-List
 To upload documents to OS/390 by FTP, a list of documents (sorted descending by size for better allocation efficiency) and their sizes have to be compiled. The sizes output is used to allocate the required space individually for each dataset. *BOOK* files are by nature padded to 4 KiB blocks anyway, so a simple division suffices. This list is then converted into FTP commands:
 ```
-ls -1Ssk |grep -v '^total' |grep -iv '^eo[xy]0[0-9]mst\.boo$' > /tmp/books-list.txt
-awk '{print "site PRI=" $1 / 4 "\nput " $2 " " $2 "k"}' < /tmp/books-list.txt > /tmp/books-upload.txt
+ls -1Ssk |grep -v '^total' |grep -Eiv '^[0-9]+ eo[xy]0[0-9]mst\.boo$' > /tmp/books-list.txt
+
+awk '{prefix = NR % 4; print "site VOL=BOOKS" prefix "\nsite PRI=" $1 / 4 "\nput " $2 " " $2 "k"}' < /tmp/books-list.txt > /tmp/books-upload.txt
 ```
-This generates two lines per upload, one for setting the allocation size, and one for the actual upload. Example:
+This generates three lines per upload:
+- one for setting the destination volume,
+- one for setting the allocation size,
+- and one for the actual upload.
+
+Example:
 ```
+site VOL=BOOKS0
 site PRI=9
 put orvvit3c.boo orvvit3c.book
+site VOL=BOOKS1
 site PRI=8
 put zu4gf08t.boo zu4gf08t.book
 …
 ```
-Together with the `cd` commands from `.netrc` above, the DS name will be assembled to be `EOY.ENU.BOOKNAME.BOOK`.
+Together with the `cd` commands from `.netrc` above, the DS name will be assembled to be `EOY.BOOKS.BOOKNAME.BOOK`.
 
-Above, certain books are eliminated by `grep` from being handled. Those are part of the BookManager/READ install on OS/390.
+Above, certain books are eliminated by `grep` from being handled. Those are part of *BookManager/READ* on OS/390, and located on the OS3DAA volume.
 
-In case something went wrong, it might be advisable to convert the given list into a second FTP commands file for deleting uploaded files:
+In case something went wrong, it might be advisable to convert the given list into a second FTP commands file for deleting uploaded files by issuing FTP delete commands:
 ```
 awk '{print "del " $2 "k"}' < /tmp/books-list.txt > /tmp/books-delete.txt
 ```
 Those files are to be fed to *stdin* of the `ftp` command. See below.
 
 ----
-## Adding a new volume to OS/390
+## Adding new volumes to OS/390
 I'm roughly using the Jay Moseley instructions about [Adding DASD Volumes](https://www.jaymoseley.com/hercules/installMVS/addingDasdV7.htm).
 
-The following table provides information about the most current device type, the 3390.
+The following table provides information about the most current device type, the 3390 family. It lists the name to be used on the command line parameter for the device type and respective size, for creating DASD volumes.
 ```
-DT-Mod  |  Cyls | Trk | Bytes per trk   | Total Bytes
---------+-------+-----+-----------------+----------------------------
-3390-1  |  1113 |  15 | 25,088 - 55,296 |    846,236,160 ( 0.79 GiB)
-3390-2  |  2226 |  15 | 25,088 - 55,296 |  1,692,472,320 ( 1.58 GiB)
-3390-3  |  3339 |  15 | 25,088 - 55,296 |  2,538,708,480 ( 2.36 GiB)
-3390-9  | 10017 |  15 | 56,664          |  8,514,049,320 ( 7.93 GiB)
-3390-27 | 32760 |  15 | 56,664          | 27,844,689,600 (25.93 GiB)
-3390-54 | 65520 |  15 | 56,664          | 55,689,379,200 (51.86 GiB)
+Type-Mdl |     Total Bytes
+---------+-----------------------------
+3390-1   |     846,236,160 ( 0.79 GiB)
+3390-2   |   1,692,472,320 ( 1.58 GiB)
+3390-3   |   2,538,708,480 ( 2.36 GiB)
+3390-9   |   8,514,049,320 ( 7.93 GiB)
 ```
-See the [Mainframe Disk Capacity Table](https://ibmmainframes.com/references/disk.html) for a table of possible sizes, and relate to the *CKD DEVICES* table in the Hercules documentation [Creating DASD](https://sdl-hercules-390.github.io/html/hercload.html#loading) regarding *devtype-model* to use on the command line.
+For details, see the [Mainframe Disk Capacity Table](https://ibmmainframes.com/references/disk.html) for more devices and their sizes. You need to relate those to the *CKD DEVICES* table in the Hercules documentation [Creating DASD](https://sdl-hercules-390.github.io/html/hercload.html#loading) regarding *devtype-model* to use on the command line.
 
-First, create the new volume on the host side. Here, we create a 25.93 GiB volume with the less efficient but quicker zlib compression type.
-```
-dasdinit64 -z books0-a92 3390-27 BOOKS0
-```
-Obey probable user/group assignments, so Hercules can access the file when not running as *root*!
+**Note**: OS/390 ADCD 2.10 is partly incompatible with large 3390 DASDs.
 
-### Make Hercules recognize the new volume
+First, create the new volumes on the host side. Here, we create several 7.93 GiB volumes with the less efficient but quicker zlib compression type.
+```
+dasdinit64 -z books0-a92 3390-9 BOOKS0
+dasdinit64 -z books1-a93 3390-9 BOOKS1
+dasdinit64 -z books2-a94 3390-9 BOOKS2
+dasdinit64 -z books3-a95 3390-9 BOOKS3
+```
+Obey probable user/group assignments, so Hercules can access the files when not running as *root*!
+
+### Make Hercules recognize the new volumes
 This can be done online. No need to Re-IPL.
 
 - From the hercules console (not MVS console) add the volume to the virtual hardware:
 ```
 attach 0A92 3390 dasd/books0-a92
-```
-- Edit `hercules.cnf` to add an appropriate entry for the new volume. Syntax is the same as with the `attach` command, sans "attach".
+attach 0A93 3390 dasd/books1-a93
+attach 0A94 3390 dasd/books2-a94
+attach 0A95 3390 dasd/books3-a95
 
-The next steps involve preparing the volume from within the OS/390 environment.
-
-- Create the VTOC by running the JCL shown. The values given provide adequate space in the VTOC for around 10,400 entries. In my example case, 6,464 datasets occupy 62% of the VTOC.
 ```
-//P390M        JOB  1,P390,NOTIFY=P390
+- Edit `hercules.cnf` to add appropriate entries for the new volume. Syntax is the same as with the `attach` command, sans "attach". This is necessary to have the volume reappear after you quit and restart Hercules.
+
+The next steps involve preparing the volumes from within the OS/390 environment.
+
+- Create the VTOCs by running the JCL shown. The values given provide adequate space in the VTOC for many entries.
+```
+//P390INZ      JOB  1,P390,MSGCLASS=A
 //             EXEC PGM=ICKDSF
 //SERLOG       DD   DSN=SYS1.LOGREC,DISP=SHR
 //SYSPRINT     DD   SYSOUT=*
 //SYSIN        DD   *
-    INIT UNITADDRESS(A92) NOVERIFY VOLID(BOOKS0) OWNERID(P390) -
-       VTOC(0,1,210)
+    INIT UNITADDRESS(A92) NOVERIFY VOLID(BOOKS0) VTOC(0,1,50)
+    INIT UNITADDRESS(A93) NOVERIFY VOLID(BOOKS1) VTOC(0,1,50)
+    INIT UNITADDRESS(A94) NOVERIFY VOLID(BOOKS2) VTOC(0,1,50)
+    INIT UNITADDRESS(A95) NOVERIFY VOLID(BOOKS3) VTOC(0,1,50)
 /*
 ```
-**Note that you need to confirm the action on the MVS console!**
-- Vary the device online, and mount it (MVS console):
+**Note that you need to confirm the action on the MVS console for each volume!**
+- Vary the devices online, and mount them (MVS console):
 ```
 V /0A92,ONLINE
+V /0A93,ONLINE
+V /0A94,ONLINE
+V /0A95,ONLINE
 M /0A92,VOL=(SL,BOOKS0),USE=PRIVATE
+M /0A93,VOL=(SL,BOOKS1),USE=PRIVATE
+M /0A94,VOL=(SL,BOOKS2),USE=PRIVATE
+M /0A95,VOL=(SL,BOOKS3),USE=PRIVATE
 ```
 - Edit `SYS1.ADCD10.PARMLIB(VATLST00)`, add an entry for `BOOKS*`-volumes reflecting the manual mount before:
 ```
@@ -138,9 +163,9 @@ BOOKS*,0,2,3390    ,Y
 ```
 ftp p390 < /tmp/books-upload.txt
 ```
-In conjunction with the AS/400 based documents index facilities, you can look up the documents 8-char name. It's in the first column, in braces. With that information, you can then launch *BookManager/READ* to open this one *BOOK* from a TSO READY prompt:
+In conjunction with the AS/400 based documents index facilities discussed in the main [README](README.md), you can look up the documents 8-char name. It's in the first column, in braces. With that information, you can then launch *BookManager/READ* to open this one *BOOK* from a TSO READY prompt:
 ```
-BOOKMGR BOOK(EOY.ENU.ECSIKPLP.BOOK)
+BOOKMGR BOOK(EOY.BOOKS.ECSIKPLP.BOOK)
 ```
 
 ----
@@ -159,7 +184,7 @@ To add *BOOK*s to a Bookshelf dataset,
 - type `TSO BOOKMGR` into an ISPF *Option* line
 - Press Enter to see the default Bookshelfs list
 - Navigate to the Menubar. Choose *Books* => *3. List books...*
-- Specify the *Data set filter* in the shown input field as `EOY.ENU.*.BOOK` and press enter
+- Specify the *Data set filter* in the shown input field as `EOY.BOOKS.*.BOOK` and press enter
 - Press enter to copy the resulting short list into a temporary Bookshelf
 - After some time needed to parse the *BOOK* datasets, a list of the first 2,112 *BOOK*s is presented
 - Navigate to the Menubar. Choose *Group* => *4. Select all*
@@ -170,8 +195,8 @@ To add *BOOK*s to a Bookshelf dataset,
 Bookshelf name  . . . . . . ALLBOOKS
 Description . . . . . . . . All Books
 Search index name . . . . . ALLBOOKS
-Bookshelf data set name . . EOY.ENU.ALLBOOKS.BKSHELF
-Search index data set name  EOY.ENU.ALLBOOKS.BKINDEX
+Bookshelf data set name . . EOY.BOOKS.ALLBOOKS.BKSHELF
+Search index data set name  EOY.BOOKS.ALLBOOKS.BKINDEX
 ```
 For now the *Search index* information is not used. At a later point in time, this documentation might be updated with how to create a search index for the given (very large) Bookshelf.
 - Confirm the next *Data set name* in the input field.
@@ -179,15 +204,15 @@ For now the *Search index* information is not used. At a later point in time, th
 The Bookshelf dataset has been created with default values which is enough to accommodate 2,112 *BOOK* entries. The default parameters in the screen for creating a new Bookshelf suggest that listing *BOOK*s will create a temporary Bookshelf dataset. The space allocated is enough for 2,112 *BOOK* entries.
 
 #### Providing more space
-The Bookshelf file allocation needs to be made larger, so more *BOOK*s can be added to the Bookshelf. To have each and all *BOOK*s things on one volume, creating this on the `BOOKS0` DASD might be advisable. Most likely, the default dataset has been allocated on some arbitrary volume, anyway. Correct all of this by running the following JCL:
+The Bookshelf file allocation needs to be made larger, so more *BOOK*s can be added to the Bookshelf.
 ```
 //P390CP   JOB  1,P390,NOTIFY=P390
 //CPYDTA   EXEC PGM=IEBGENER
 //SYSIN    DD   DUMMY
 //SYSPRINT DD   SYSOUT=*
-//SYSUT1   DD   DSN=EOY.ENU.ALLBOOKS.BKSHELF,DISP=(OLD,DELETE)
-//SYSUT2   DD   DSN=EOY.ENU.ALLBOOKS.BKSHELF.NEW,DISP=(NEW,CATLG),
-//             UNIT=SYSDA,VOL=SER=BOOKS0,
+//SYSUT1   DD   DSN=EOY.BOOKS.ALLBOOKS.BKSHELF,DISP=(OLD,DELETE)
+//SYSUT2   DD   DSN=EOY.BOOKS.ALLBOOKS.BKSHELF.NEW,DISP=(NEW,CATLG),
+//             UNIT=SYSDA
 //             SPACE=(CYL,(100,100)),
 //             DCB=(DSORG=PS,RECFM=VB,LRECL=259,BLKSIZE=8000)
 //*
@@ -195,8 +220,8 @@ The Bookshelf file allocation needs to be made larger, so more *BOOK*s can be ad
 //RNMF     EXEC PGM=IDCAMS
 //SYSPRINT DD   SYSOUT=*
 //SYSIN    DD   *
-  ALTER EOY.ENU.ALLBOOKS.BKSHELF.NEW -
-        NEWNAME(EOY.ENU.ALLBOOKS.BKSHELF)
+  ALTER EOY.BOOKS.ALLBOOKS.BKSHELF.NEW -
+        NEWNAME(EOY.BOOKS.ALLBOOKS.BKSHELF)
 /*
 ```
 The DCB parameters have been obtained from the original file.
@@ -213,7 +238,7 @@ First we need to know which was the last file added to the Bookshelf.
 
 The next steps are somewhat free-form and highly repetitive. Depending on the first character of the last added file, you need to first add the rest of this "character's group" to the Bookshelf, and from there work through the alphabet in the *Data set filter* until all *BOOK*s have been added. Somewhat generalized, the needed steps are:
 - Navigate to the Menubar. Choose *Books* => *3. List books...*
-- Specify the *Data set filter* in the shown input field as e. g. `EOY.ENU.A*.BOOK` and press enter
+- Specify the *Data set filter* in the shown input field as e. g. `EOY.BOOKS.A*.BOOK` and press enter
 - After some time needed to parse the *BOOK* datasets, a list of *BOOK*s is presented
 - Navigate to the Menubar. Choose *Group* => *4. Select all*
 - Navigate to the Menubar. Choose *Group* => *1. Put selected books on a bookshelf...*
@@ -226,4 +251,4 @@ The next steps are somewhat free-form and highly repetitive. Depending on the fi
 You may choose to use two loops instead: One to create many temporary Bookshelves (alphapbetically descending) and leave them open (Steps 1..3), and in a second run, add the temporary dataset's contents to the main Bookshelf.
 
 ----
-2024-06-21 poc@pocnet.net
+2025-04-06 poc@pocnet.net
