@@ -60,7 +60,7 @@ To upload documents to OS/390 by FTP, a list of documents (sorted descending by 
 ```
 ls -1Ssk |grep -v '^total' |grep -Eiv '^[0-9]+ eo[xy]0[0-9]mst\.boo$' > /tmp/books-list.txt
 
-awk '{prefix = NR % 4; print "site VOL=BOOKS" prefix "\nsite PRI=" $1 / 4 "\nput " $2 " " $2 "k"}' < /tmp/books-list.txt > /tmp/books-upload.txt
+awk '{volno = NR % 4; print "site VOL=BOOKS" volno "\nsite PRI=" $1 / 4 "\nput " $2 " " $2 "k"}' < /tmp/books-list.txt > /tmp/books-upload.txt
 ```
 This generates three lines per upload:
 - one for setting the destination volume,
