@@ -102,7 +102,7 @@ Type-Mdl |     Total Bytes
 ```
 For details, see the [Mainframe Disk Capacity Table](https://ibmmainframes.com/references/disk.html) for more devices and their sizes. You need to relate those to the *CKD DEVICES* table in the Hercules documentation [Creating DASD](https://sdl-hercules-390.github.io/html/hercload.html#loading) regarding *devtype-model* to use on the command line.
 
-**Note**: OS/390 ADCD 2.10 is partly incompatible with large 3390 DASDs.
+**Note**: OS/390 ADCD 2.10 is partly incompatible with very large 3390 DASDs. It works with the 7.93 GB variant, though.
 
 First, create the new volumes on the host side. Here, we create several 7.93 GiB volumes with the less efficient but quicker zlib compression type.
 ```
@@ -111,7 +111,7 @@ dasdinit64 -z books1-a93 3390-9 BOOKS1
 dasdinit64 -z books2-a94 3390-9 BOOKS2
 dasdinit64 -z books3-a95 3390-9 BOOKS3
 ```
-Obey probable user/group assignments, so Hercules can access the files when not running as *root*!
+Obey probable user/group assignments on the host side, so Hercules can access the files when not running as *root*!
 
 ### Make Hercules recognize the new volumes
 This can be done online. No need to Re-IPL.
@@ -135,10 +135,10 @@ The next steps involve preparing the volumes from within the OS/390 environment.
 //SERLOG       DD   DSN=SYS1.LOGREC,DISP=SHR
 //SYSPRINT     DD   SYSOUT=*
 //SYSIN        DD   *
-    INIT UNITADDRESS(A92) NOVERIFY VOLID(BOOKS0) VTOC(0,1,50)
-    INIT UNITADDRESS(A93) NOVERIFY VOLID(BOOKS1) VTOC(0,1,50)
-    INIT UNITADDRESS(A94) NOVERIFY VOLID(BOOKS2) VTOC(0,1,50)
-    INIT UNITADDRESS(A95) NOVERIFY VOLID(BOOKS3) VTOC(0,1,50)
+    INIT UNITADDRESS(A92) NOVERIFY VOLID(BOOKS0) VTOC(0,1,150)
+    INIT UNITADDRESS(A93) NOVERIFY VOLID(BOOKS1) VTOC(0,1,150)
+    INIT UNITADDRESS(A94) NOVERIFY VOLID(BOOKS2) VTOC(0,1,150)
+    INIT UNITADDRESS(A95) NOVERIFY VOLID(BOOKS3) VTOC(0,1,150)
 /*
 ```
 **Note that you need to confirm the action on the MVS console for each volume!**
