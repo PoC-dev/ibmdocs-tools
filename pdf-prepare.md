@@ -38,7 +38,7 @@ sed -Ei -e 's/:[ ]+/:/' -e 's/[ ]*$//' /tmp/pdf-document-numbers.txt
 ```
 - Use the result to create symlinks into an empty directory:
 ```
-cat document-numbers.txt |while read FILE DOCNBR; do
+cat /tmp/pdf-document-numbers.txt |while read FILE DOCNBR; do
  ln -v ${FILE} ../newpdfs/${DOCNBR}.pdf
 done
 ```
