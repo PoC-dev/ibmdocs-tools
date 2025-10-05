@@ -29,7 +29,7 @@ pdfgrep --page-range=1-3 -e '[A-Z][A-Z,0-9][0-9][0-9]-[0-9]{4}-[0-9]{2}' *.pdf >
 ```
 - Delete unnecessary white space:
 ```
-sed -Ei -e 's/:[ ]\+/:/' -e 's/[ ]*$//' /tmp/pdf-document-numbers.txt
+sed -Ei -e 's/:[ ]+/:/' -e 's/[ ]*$//' /tmp/pdf-document-numbers.txt
 ```
 - Manually inspect the resulting text file. Sometimes, one PDF file yields multiple matches. Ideally, there should be one line with a file name, a colon, and the document number. Clean excess matches per file. Sometimes there seems to be complete garbage being found. Remove those lines completely. The PDFs in question then need to be inspected by opening them and looking inside.
 - Change the colon to a blank, e. g. within `vim`:
