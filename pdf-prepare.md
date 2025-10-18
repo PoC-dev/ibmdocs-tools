@@ -87,19 +87,14 @@ Now, transform the files into SQL statements.
 for FILE in *.txt; do sed -E -e "s/'/''/g" -e "1s/^(.*)$/UPDATE ibmdocpf SET title='\1',/" -e "2s/^(.*)$/subtitle='\1',/" -e "3s/^([0-9]{4})$/released=\1 WHERE docnbr='$(basename ${FILE} .txt)';/" ${FILE}; done |grep -v "^subtitle='',$" |fold > /tmp/sqldoit.txt
 ```
 
-For the following upload, and `runsqlstm` command to succeed, it's crucial to know the maximum line length of the input data. By default, this is 92 chars for source PFs, and 80 for *runsqlstm*. From experience, this is not sufficient for some PDFs with very long titles.
+Upload the file into e. g. the sources file.
 ```
-crtsrcpf file(sqlstm) rcdlen(132)
-```
-
-Upload the file into the created file.
-```
-printf "ascii\nput /tmp/sqldoit.txt ibmdocs/sqlstm.sqldoit\n" |ftp as400
+printf "ascii\nput /tmp/sqldoit.txt ibmdocs/sources.sqldoit\n" |ftp as400
 ```
 
 Run the import as batch job.
 ```
-sbmjob cmd(runsqlstm srcfile(ibmdocs/sqlstm) srcmbr(sqldoit) commit(*none) dftrdbcol(ibmdocs)) job(updibmdoc)
+sbmjob cmd(runsqlstm srcfile(ibmdocs/sources) srcmbr(sqldoit) commit(*none) dftrdbcol(ibmdocs)) job(updibmdoc)
 ```
 
 ----
