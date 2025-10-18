@@ -54,16 +54,53 @@ rm -rf newpdfs
 - Manually inspect the database for missing titles. You need to manually open each document with an empty metadata record in the database, and type/copy-paste the title and release year along with a probable subtitle (most often for RedBooks) to the database. This is what the AS/400 frontend is mainly meant for.
 - Finally run `ibmdoc-generate-index.sh` to publish the new database entries to the documents table.
 
-### For future enhancements
-Perhaps it might help automatic extraction of title and year to have a copy of the front page in a text file.
-```
-ls -1 |while read PDF; do pdftotext -f 1 -l 1 ${PDF} $(basename ${PDF} .pdf).txt; done
-```
-This is currently under investigation.
+### Automatic extraction of title and year
+The following section describes procedures for automatic extraction of title and year. This is feasible only if the bunch of PDFs all are relatively uniform in appearance. If in doubt, manually handle the fewer exceptions, and automate the rest.
 
-**Note:** `ibmdoc-copy-unhandled-pdfs.pl` copies such "unhandled" PDFs being already in the database, but with default values, to separate directory for easier treatment:
+This section assumes that you have already renamed and added the respective PDFs to the database through running `ibmdoc-db-lint.pl`, and subsequently `ibmdoc-copy-unhandled-pdfs.pl` to generate a copy of not-indexed PDFs to a separate directory. All steps take place within this directory.
+
+> **Note:** `ibmdoc-copy-unhandled-pdfs.pl` copies such "unhandled" PDFs being already in the database, but with default values, to separate directory for easier treatment:
 - Empty title,
 - Year of publication 1960.
 
+First, generate a textual copy of the front page into a separate file.
+```
+for PDF in *.pdf; do pdftotext -f 1 -l 1 ${PDF} $(basename ${PDF} .pdf).txt; done
+vi *.txt
+```
+Due to PDFs being free-format, the safest approach is to manually open each text file in an editor of choice, correct formatting, and save. Facing hundreds of text files to open and handle seems daunting. But manually looking through hundreds of similar PDFs, and typing the data into the 5250 form is even more daunting. Desired result is that the first line contains the document title, and the second the document subtitle, if available. If not, it should be an empty line.
+
+Next step is to extract a possible publication year from page 4, and append this to the respective text file.
+```
+ls -1 *.pdf |while read PDF; do pdfgrep --page-range=4 -e '[1,2][0-9][0-9][0-9]' "${PDF}" |fgrep 'Edition' |sed -E 's/^.*([1,2][0-9][0-9][0-9]).*$/\1/' >> "$(basename ${PDF} .pdf).txt"; done
+```
+
+Verify that each text file now has three lines.
+```
+wc -l *.txt |grep -E '^[[:space:]]+[1-2]'
+```
+
+Run `file *.txt` and verify that all files are plain ASCII. Often, some UTF-8 typographical apostrophes slip through, and will cause errors when running the eventual SQL `UPDATE` statements.
+
+Now, transform the files into SQL statements.
+```
+for FILE in *.txt; do sed -E -e "s/'/''/g" -e "1s/^(.*)$/UPDATE ibmdocpf SET title='\1',/" -e "2s/^(.*)$/subtitle='\1',/" -e "3s/^([0-9]{4})$/released=\1 WHERE docnbr='$(basename ${FILE} .txt)';/" ${FILE}; done |grep -v "^subtitle='',$" |fold > /tmp/sqldoit.txt
+```
+
+For the following upload, and `runsqlstm` command to succeed, it's crucial to know the maximum line length of the input data. By default, this is 92 chars for source PFs, and 80 for *runsqlstm*. From experience, this is not sufficient for some PDFs with very long titles.
+```
+crtsrcpf file(sqlstm) rcdlen(132)
+```
+
+Upload the file into the created file.
+```
+printf "ascii\nput /tmp/sqldoit.txt ibmdocs/sqlstm.sqldoit\n" |ftp as400
+```
+
+Run the import as batch job.
+```
+sbmjob cmd(runsqlstm srcfile(ibmdocs/sqlstm) srcmbr(sqldoit) commit(*none) dftrdbcol(ibmdocs)) job(updibmdoc)
+```
+
 ----
-2023-11-05 poc@pocnet.net
+2025-10-18 poc@pocnet.net
