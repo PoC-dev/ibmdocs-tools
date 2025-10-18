@@ -72,7 +72,7 @@ Due to PDFs being free-format, the safest approach is to manually open each text
 
 Next step is to extract a possible publication year from page 4, and append this to the respective text file.
 ```
-ls -1 *.pdf |while read PDF; do pdfgrep --page-range=4 -e '[1,2][0-9][0-9][0-9]' "${PDF}" |fgrep 'Edition' |sed -E 's/^.*([1,2][0-9][0-9][0-9]).*$/\1/' >> "$(basename ${PDF} .pdf).txt"; done
+for PDF in *.pdf; do pdfgrep --page-range=4 -e '[1,2][0-9][0-9][0-9]' "${PDF}" |fgrep 'Edition' |sed -E 's/^.*([1,2][0-9][0-9][0-9]).*$/\1/' >> "$(basename ${PDF} .pdf).txt"; done
 ```
 
 Verify that each text file now has three lines.
