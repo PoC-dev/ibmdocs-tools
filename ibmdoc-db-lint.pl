@@ -189,14 +189,9 @@ if ( $errcount eq 0 ) {
 }
 
 #-------------------------------------------------------------------------------
-# See if we have a file for each database record.
+
 printf("Phase 2: Comparing cached database content to directory...\n");
 
-my $odbc_list_alltypes_sth = $dbh->prepare("SELECT docnbr, doctype FROM ibmdoctypf ORDER BY docnbr, doctype");
-if (defined($dbh->errstr)) {
-    printf("SQL preparation error for odbc_check_alltyp(): %s\n", $dbh->errstr);
-    die;
-}
 my $odbc_delete_doctyp_sth = $dbh->prepare("DELETE FROM ibmdoctypf WHERE docnbr=? AND doctype=?");
 if (defined($dbh->errstr)) {
     printf("SQL preparation error for odbc_delete_doctyp(): %s\n", $dbh->errstr);
@@ -207,20 +202,17 @@ $errcount = 0;
 
 #---------------------------------------
 
-$odbc_list_alltypes_sth->execute();
-if (defined($dbh->errstr)) {
-    printf("SQL execution error for odbc_check_alltyp(): %s\n", $dbh->errstr);
-    die;
-}
+# Iterate over cached ibmdoctypf entries instead of fetching from DB.
+foreach my $key (sort keys %ibmdoctypf_hash) {
+    ($docnbr, $doctype) = split(/\|/, $key, 2);
 
-while( ($docnbr, $doctype) = $odbc_list_alltypes_sth->fetchrow) {
-    if (defined($dbh->errstr)) {
-        printf("SQL fetch error for odbc_check_alltyp(): %s\n", $dbh->errstr);
-        die;
+    # Defensive cleanup of possible padding blanks
+    if ( defined($docnbr) ) {
+        $docnbr  =~ s/\s+$//;
     }
-
-    # Get rid of possible padding blanks at the end.
-    $docnbr =~ s/\s+$//;
+    if ( defined($doctype) ) {
+        $doctype =~ s/\s+$//;
+    }
 
     $tmpstr = sprintf("%s/%s", $docpath, $docnbr);
 
@@ -239,11 +231,6 @@ while( ($docnbr, $doctype) = $odbc_list_alltypes_sth->fetchrow) {
 }
 
 #---------------------------------------
-
-# Clean up after ourselves.
-if ( $odbc_list_alltypes_sth ) {
-    $odbc_list_alltypes_sth->finish;
-}
 
 # Handle errors gracefully.
 if ( $errcount eq 0 ) {
