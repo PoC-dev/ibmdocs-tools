@@ -176,7 +176,7 @@ Unfortunately, *BookManager/READ* has a limit of 2,112 datasets to be listed in 
 
 A Bookshelf can list many more *BOOK* datasets. Thus it's a good idea to add all *BOOK*s to a Bookshelf to have an index readily available.
 
-**Note:** There's a limitation of around 8k *BOOK*s which can be handled in the default TSO memory region. This is not about the OS running out of memory! Instead, the user's single virtual memory allocation (minus some overhead) is exhausted. Workaround: Add plenty of memory in the logon screen's *Size* field. Maximum is 2096128 (bytes).
+> **Note:** There's a limitation of around 8k *BOOK*s which can be handled in the default TSO memory region. This is not about the OS running out of memory! Instead, the user's single virtual memory allocation (minus some overhead) is exhausted. Workaround: Add plenty of memory in the logon screen's *Size* field. Maximum is 2096128 (bytes).
 
 The filter mechanism of *BookManager/READ* for listing datasets supports only simple wildcard matches, so in the end you need to iterate through the complete alphabet 26 times to eventually add all datasets to an "allbooks" shelf. So far I'm not aware if it's possible to automate this process.
 
