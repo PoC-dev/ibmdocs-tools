@@ -94,5 +94,10 @@ DELETE FROM newdocspf WHERE filename IN ('foobar1', 'foobar2')
 
 If you want to upload the files to OS/390, better no not delete them, yet.
 
+Finally, clean up the temporary table's contents for the next run:
+```
+DELETE FROM newdocspf
+```
+
 ----
 2025-12-28 poc@pocnet.net
