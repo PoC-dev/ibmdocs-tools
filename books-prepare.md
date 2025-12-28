@@ -42,6 +42,24 @@ SBMJOB CMD(CPYFRMIMPF FROMSTMF('/home/poc/newdocs.txt') +
  JOB(IMPNEWDOCS)
 RMVLNK OBJLNK('/home/poc/newdocs.txt')
 ```
+- Show "global" duplicates of document numbers, for obtaining a list of to delete file-/dlsnames from the new documents cache. Result must be empty.
+```
+SELECT filename FROM newdocspf
+WHERE docnbr IN (
+ SELECT docnbr FROM ibmdoctypf WHERE doctype='B'
+)
+```
+- Manually extract the shown file names, add `.boo` extension and feed the list to `rm`, inside the new documents directory.
+
+> **Note:** If you want to keep the original document but want it to have the new dlsname, you need to rename it in *ibmdoctypf*. Remember to rename the dataset in OS/390, if you use this for reading *BOOK*s.
+
+- Delete duplicates (after file deletion):
+```
+DELETE FROM newdocspf
+WHERE docnbr IN (
+ SELECT docnbr FROM ibmdoctypf WHERE doctype='B'
+)
+```
 - Output a list of "local" duplicates sharing the same document number, but with different short (file) names. Result must be empty.
 ```
 SELECT docnbr, COUNT(docnbr) FROM newdocspf
@@ -67,24 +85,6 @@ Both output should look similar, if any. Delete the resulting books from the dat
 ```
 DELETE FROM newdocspf WHERE filename IN ('foobar1', 'foobar2')
 ```
-- Show "global" duplicates of document numbers, for obtaining a list of to delete file-/dlsnames from the new documents cache. Result must be empty.
-```
-SELECT filename FROM newdocspf
-WHERE docnbr IN (
- SELECT docnbr FROM ibmdoctypf WHERE doctype='B'
-)
-```
-- Manually extract the shown file names, add `.boo` extension and feed the list to `rm`, inside the new documents directory.
-
-**Note:** If you want to keep the original document but want it to have the new dlsname, you need to rename it in *ibmdoctypf*. Remember to rename the dataset in OS/390, if you use this for reading *BOOK*s.
-
-- Delete duplicates (after file deletion):
-```
-DELETE FROM newdocspf
-WHERE docnbr IN (
- SELECT docnbr FROM ibmdoctypf WHERE doctype='B'
-)
-```
 - **VERY IMPORTANT! There shall be no duplicate records!!**
 - **Hint: Leftover UTF-8 characters will cause mysterious SQL errors with causes as "string too long", and "right truncation error".**
 - Probably create a local backup into a save file from the current state of `IBMDOCS`.
@@ -95,4 +95,4 @@ WHERE docnbr IN (
 If you want to upload the files to OS/390, better no not delete them, yet.
 
 ----
-2024-05-30 poc@pocnet.net
+2025-12-28 poc@pocnet.net
