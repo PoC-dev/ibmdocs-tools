@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2023, 2025 Patrik Schindler <poc@pocnet.net>
+# Copyright 2023, 2026 Patrik Schindler <poc@pocnet.net>
 #
 # This script is part of the IBM Documentation Utilities, to be found on https://github.com/PoC-dev/ibmdocs-tools - see there for
 # further details.
