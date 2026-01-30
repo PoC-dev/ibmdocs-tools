@@ -24,6 +24,9 @@
 # The fields (title, filename, released, docnbr) are automatically copied into the appropriate tables IBMDOCPF, and IBMDOCTYPF. Hard
 # links from $srcpath to $dstpath make the BOOKs available to the library server, and the documents list output, generated in a
 # separate step.
+#
+# FIXME: We should handle cases where the dlsname is empty and generate an unique name.
+#
 
 use strict;
 use warnings;
