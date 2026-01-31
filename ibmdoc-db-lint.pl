@@ -342,6 +342,50 @@ if ( $errcount gt 0 ) {
 }
 
 #-------------------------------------------------------------------------------
+# Check for BOOks without a dlsname.
+printf("Phase 5: Checking for books without a dlsname...\n");
+
+my $odbc_no_dlsname_sth = $dbh->prepare("
+    SELECT docnbr FROM ibmdoctypf
+        WHERE doctype='B' AND ifnull(dlsname, 'NIL')='NIL'
+");
+if (defined($dbh->errstr)) {
+    printf("SQL preparation error for odbc_no_dlsname(): %s\n", $dbh->errstr);
+    die;
+}
+
+$errcount = 0;
+
+#---------------------------------------
+
+$odbc_no_dlsname_sth->execute();
+if (defined($dbh->errstr)) {
+    printf("SQL execution error for odbc_no_dlsname(): %s\n", $dbh->errstr);
+    die;
+}
+
+while( ($docnbr) = $odbc_no_dlsname_sth->fetchrow) {
+    if (defined($dbh->errstr)) {
+        printf("SQL fetch error for odbc_no_dlsname(): %s\n", $dbh->errstr);
+        $errcount++;
+        next;
+    }
+
+    # Get rid of possible padding blanks at the end.
+    $docnbr =~ s/\s+$//;
+    printf("\t%s\n", $docnbr);
+
+    # FIXME: If it is empty, add one.
+}
+
+#---------------------------------------
+
+# Clean up after ourselves.
+if ( $odbc_no_dlsname_sth ) {
+    $odbc_no_dlsname_sth->finish;
+}
+
+#-------------------------------------------------------------------------------
 
 # Close DB connection.
 if ( $dbh ) {
