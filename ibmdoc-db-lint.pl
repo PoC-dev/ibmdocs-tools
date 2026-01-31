@@ -221,7 +221,7 @@ foreach my $key (sort keys %ibmdoctypf_hash) {
         $odbc_delete_doctyp_sth->execute($docnbr, 'P');
     } elsif ( $doctype eq 'B' && ! -e $tmpstr . '.boo' ) {
         printf("Found %s.boo in DB but not in file system. Deleting entry.\n", $docnbr);
-        $odbc_delete_doctyp_sth->execute($docnbr, 'P');
+        $odbc_delete_doctyp_sth->execute($docnbr, 'B');
     }
     if (defined($dbh->errstr)) {
         printf("SQL execute error for odbc_delete_doctyp(): %s\n", $dbh->errstr);
