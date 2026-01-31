@@ -268,7 +268,7 @@ if (defined($dbh->errstr)) {
 
 while( ($docnbr, $title) = $odbc_list_orphans_sth->fetchrow) {
     if (defined($dbh->errstr)) {
-        printf("SQL execution error for odbc_list_orphans(): %s\n", $dbh->errstr);
+        printf("SQL fetch error for odbc_list_orphans(): %s\n", $dbh->errstr);
         $errcount++;
         next;
     }
@@ -318,7 +318,7 @@ if (defined($dbh->errstr)) {
 
 while( ($docnbr) = $odbc_list_orphans_sth->fetchrow) {
     if (defined($dbh->errstr)) {
-        printf("SQL execution error for odbc_list_orphans(): %s\n", $dbh->errstr);
+        printf("SQL fetch error for odbc_list_orphans(): %s\n", $dbh->errstr);
         $errcount++;
         next;
     }
