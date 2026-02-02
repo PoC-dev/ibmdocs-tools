@@ -39,7 +39,6 @@ login P390
 password P390
 macdef init
  bin
- site VOL=BOOKS0
  site LR=4096
  site BLK=4096
  site RECF=FBS
@@ -58,7 +57,7 @@ See [Using PDFs and BookManager Books on your workstation or mainframe](https://
 ### Generating the FTP Upload-List
 To upload documents to OS/390 by FTP, a list of documents (sorted descending by size for better allocation efficiency) and their sizes have to be compiled. The sizes output is used to allocate the required space individually for each dataset. *BOOK* files are by nature padded to 4 KiB blocks anyway, so a simple division suffices. This list is then converted into FTP commands:
 ```
-ls -1Ssk |grep -v '^total' |grep -Eiv '^[0-9]+ eo[xy]0[0-9]mst\.boo$' > /tmp/books-list.txt
+ls -1Ssk |grep -v '^total' |grep -Eiv '^[[:space:]]*[0-9]+ eo[xy]0[0-9]mst\.boo$' > /tmp/books-list.txt
 
 awk '{volno = NR % 4; print "site VOL=BOOKS" volno "\nsite PRI=" $1 / 4 "\nput " $2 " " $2 "k"}' < /tmp/books-list.txt > /tmp/books-upload.txt
 ```
@@ -106,10 +105,10 @@ For details, see the [Mainframe Disk Capacity Table](https://ibmmainframes.com/r
 
 First, create the new volumes on the host side. Here, we create several 7.93 GiB volumes with the less efficient but quicker zlib compression type.
 ```
-dasdinit64 -z books0-a92 3390-9 BOOKS0
-dasdinit64 -z books1-a93 3390-9 BOOKS1
-dasdinit64 -z books2-a94 3390-9 BOOKS2
-dasdinit64 -z books3-a95 3390-9 BOOKS3
+dasdinit64 -z books0.a92 3390-9 BOOKS0
+dasdinit64 -z books1.a93 3390-9 BOOKS1
+dasdinit64 -z books2.a94 3390-9 BOOKS2
+dasdinit64 -z books3.a95 3390-9 BOOKS3
 ```
 Obey probable user/group assignments on the host side, so Hercules can access the files when not running as *root*!
 
@@ -118,10 +117,10 @@ This can be done online. No need to Re-IPL.
 
 - From the hercules console (not MVS console) add the volume to the virtual hardware:
 ```
-attach 0A92 3390 dasd/books0-a92
-attach 0A93 3390 dasd/books1-a93
-attach 0A94 3390 dasd/books2-a94
-attach 0A95 3390 dasd/books3-a95
+attach 0A92 3390 dasd/books0.a92
+attach 0A93 3390 dasd/books1.a93
+attach 0A94 3390 dasd/books2.a94
+attach 0A95 3390 dasd/books3.a95
 
 ```
 - Edit `hercules.cnf` to add appropriate entries for the new volume. Syntax is the same as with the `attach` command, sans "attach". This is necessary to have the volume reappear after you quit and restart Hercules.
