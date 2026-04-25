@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Patrik Schindler <poc@pocnet.net>.
+ * Copyright 2021-2026 Patrik Schindler <poc@pocnet.net>.
  *
  * Licensing terms.
  * This is free software; you can redistribute it and/or modify it under the
