@@ -99,5 +99,7 @@ Finally, clean up the temporary table's contents for the next run:
 DELETE FROM newdocspf
 ```
 
+> **Note:** If normally, there should be no records left, because `ibmdoc-merge-docs.pl` deletes records whose documents have been handled properly.
+
 ----
-2025-12-28 poc@pocnet.net
+2026-04-25 poc@pocnet.net
