@@ -2,6 +2,7 @@
        then press enter twice: Crash. Debug says: Problem in DETAILCT
        But that's currently unused?
 - After searching, keep cursor in PosTo
+  - To be precise, scrolling removes the cursor from PosTo.
 - After searching, keep searched string in PosTo
 - Learn about DUP function to ease mass-addition of text
 - Show SFL with document types when displaying details

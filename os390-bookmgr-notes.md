@@ -6,8 +6,9 @@ As with PDF, *BOOK*s need special software to be read:
 - the [IBM BookManager BookServer 2.3](https://github.com/cyberdotgent/bookmgr-docker)
 - the [AS/400 5250 based InfoSeeker](https://try-as400.pocnet.net/wiki/Reviving_InfoSeeker)
 - OS/390 ADCD 2.10 contains *BookManager/READ MVS*
+- Unix based [BOOk parser library and Apache module](https://github.com/cyberdotgent/geist)
 
-This list is sorted according to my personal perception of awfulness.
+This list is sorted descending according to my personal perception of awfulness.
 
 The visual rendition of text provided by the *IBM Softcopy Reader* isn't particularly friendly to the eye.
 
