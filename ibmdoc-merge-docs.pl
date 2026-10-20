@@ -43,8 +43,8 @@ my $srcpath = "/var/www/default/pages/newbooks";
 my $dstpath = "/var/www/default/pages/ibmdocs";
 
 # Vars.
-my ($count, $docnbr, $dstfile, $filename, $dbh, $released, $sql, $sql_check_doctyp_sth, $sql_check_olddoc_sth, $sql_del_newdoc_sth,
-    $sql_insert_doc_sth, $sql_insert_doctyp_sth, $sql_list_newdoc_sth, $srcfile, $title, $today
+my ($count, $docnbr, $dstfile, $filename, $dbh, $newdocs, $released, $sql, $sql_check_doctyp_sth, $sql_check_olddoc_sth,
+    $sql_del_newdoc_sth, $sql_insert_doc_sth, $sql_insert_doctyp_sth, $sql_list_newdoc_sth, $srcfile, $title, $today
 );
 
 # Causes the currently selected handle to be flushed immediately and after every print. Execute anytime before using <STDOUT>.
@@ -106,11 +106,18 @@ if (defined($dbh->errstr)) {
     printf("\tSQL execution error at sql_list_newdoc(): %s\n", $dbh->errstr);
     die;
 }
-while( ($title, $filename, $released, $docnbr) = $sql_list_newdoc_sth->fetchrow ) {
-    if ( defined($dbh->errstr) ) {
-        printf("\tSQL fetch error at sql_list_newdoc(): %s\n", $dbh->errstr);
-        next;
-    }
+
+# After a commit, the SQL cursor is closed implicitly, and we are being returned rows still in the buffer.
+# If the buffer is exhausted, we silently exit while not all work is done: Looks like EOF.
+$newdocs = $sql_list_newdoc_sth->fetchall_arrayref;
+if ( defined($dbh->errstr) ) {
+    printf("\tSQL fetch error at sql_list_newdoc(): %s\n", $dbh->errstr);
+    die;
+}
+$sql_list_newdoc_sth->finish;
+
+foreach my $row (@$newdocs) {
+    ($title, $filename, $released, $docnbr) = @$row;
 
     # Get rid of blanks at end.
     $docnbr =~ s/\s+$//;
@@ -191,7 +198,11 @@ while( ($title, $filename, $released, $docnbr) = $sql_list_newdoc_sth->fetchrow 
     if ( -e $dstfile ) {
         unlink($dstfile);
     }
-    link($srcfile, $dstfile);
+    unless ( link($srcfile, $dstfile) ) {
+        printf("\tlink('%s', '%s') failed: %s, discarding changes and skipping.\n\n", $srcfile, $dstfile, $!);
+        $dbh->do("rollback");
+        next;
+    }
 
     # Delete record from source table.
     $sql_del_newdoc_sth->execute($docnbr, $filename);
